@@ -4,7 +4,14 @@ you need to do once
 
 pip3 install --upgrade google-api-python-client google-auth-httplib2 google-auth-oauthlib
      
-the first time you run 
+     
+again only once you have to get credentials.json, by going to 
+
+https://developers.google.com/sheets/api/quickstart/python
+
+and clicking on Enable the Google Sheets API (follow the instructions and then copy the file in the dir)
+     
+then the first time you run 
 
 python3 extractIDs_lib.py
 
@@ -14,7 +21,7 @@ then you will see in your dir the files
 credentials.json
 token.pickle
 
-do NOT commit them!
+do NOT commit them! You are ok now!
 
 the Gsheet used for test is
 
