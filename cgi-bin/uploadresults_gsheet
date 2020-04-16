@@ -86,7 +86,6 @@ def main():
         headers = []
         col_simulator_filename=-1
         col_mvm_filename=-1
-        col_other_filename=33
         dict_ids = {}
         for row in range(0,len(values)):
             num=num+1
@@ -102,8 +101,6 @@ def main():
                         col_simulator_filename = col
                     if values[row][col] == "MVM_filename":
                         col_mvm_filename = col
-                    if values[row][col] == "OTHER_filename":
-                        col_other_filename = col
             # Print columns A and E, which correspond to indices 0 and 4.
                 continue
             if col_simulator_filename ==-1 or col_mvm_filename==-1:

@@ -62,9 +62,19 @@ def initGsheet(SAMPLE_SPREADSHEET_ID):
     # Call the Sheets API
     return service
 
+def getSheetNames(service,SAMPLE_SPREADSHEET_ID):
+    sheet = service.spreadsheets()
+    sheet_metadata = service.spreadsheets().get(spreadsheetId=SAMPLE_SPREADSHEET_ID).execute()
+    sheets = sheet_metadata.get('sheets', '')
+    names = []
+    for i in sheets:
+        names.append(i.get("properties", {}).get("title", 0))
+    return names
+
 
 def getRange(service,SAMPLE_SPREADSHEET_ID, SAMPLE_RANGE_NAME ):
     sheet = service.spreadsheets()
+
     result = sheet.values().get(spreadsheetId=SAMPLE_SPREADSHEET_ID,
                                 range=SAMPLE_RANGE_NAME).execute()
     values = result.get('values', [])
