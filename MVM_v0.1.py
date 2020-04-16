@@ -13,13 +13,31 @@ SAMPLE_SPREADSHEET_ID = '1MlOhG-UhXlK3htq4FqL0nN0yrl0ubAj0jRHXY4Ki6ro'
 SAMPLE_RANGE_NAME = '20200412 ISO!A:AR'
 
 
-def colnum_string(m):
-    n=m+1
+
+
+def colnum_string(n):
     string = ""
     while n > 0:
         n, remainder = divmod(n - 1, 26)
         string = chr(65 + remainder) + string
     return string
+
+def insert_single_cell(row, column, text, service):
+
+    colnum_str = colnum_string(column+1)
+    row_insert = row+1
+    body = {'values': [[text]]}
+    range_insert = '20200412 ISO!'+colnum_str+str(row_insert)+":"+colnum_str+str(row_insert)
+
+    print ("Inserting ",text , " in rage", range_insert )
+    
+    result = service.spreadsheets().values().update(spreadsheetId=SAMPLE_SPREADSHEET_ID,
+        range=range_insert,
+        valueInputOption="RAW",
+        body=body).execute()
+
+
+
 
 def main():
     """Shows basic usage of the Sheets API.
@@ -86,9 +104,9 @@ def main():
 #            print('%s %s %s %s' % ("ID", row[0], row[col_simulator_filename], row[col_mvm_filename]))
 
             if (values[row][col_simulator_filename]== "" or values[row][col_mvm_filename]==""):
-                print('%s %s %s' % ("ID", values[row][0], " has proper files"))
-            else:
                 print('%s %s %s' % ("ID", values[row][0], " AVAILABLE FOR INSERTION"))
+            else:
+                print('%s %s %s' % ("ID", values[row][0], " has proper files"))
             dict_ids[values[row][0]] =row 
 
     # write PIPPO in cel in row 7
@@ -113,29 +131,8 @@ def main():
         simulator_test_name = "pippo"
         mvm_test_name = "pluto"
         id = "120"
-        col_simulator = colnum_string(col_simulator_filename)
-        col_mvm = colnum_string(col_mvm_filename)
-        row_insert = dict_ids[id]+1
-        range_insert_simulator = '20200412 ISO!'+col_simulator+str(row_insert)+":"+col_simulator+str(row_insert)
-        range_insert_mvm = '20200412 ISO!'+col_mvm+str(row_insert)+":"+col_mvm+str(row_insert)
-#simulator
-        values_insert_simulator = [[simulator_test_name]]
-
-        print ("inserting", simulator_test_name, " in ", range_insert_simulator, col_simulator_filename, row_insert)
-        
-        body = {'values': values_insert_simulator}
-        result = service.spreadsheets().values().update(spreadsheetId=SAMPLE_SPREADSHEET_ID,
-        range=range_insert_simulator,
-        valueInputOption="RAW",
-        body=body).execute()
-#mvm
-        values_insert_mvm = [[mvm_test_name]]
-
-        body = {'values': values_insert_mvm}
-        result = service.spreadsheets().values().update(spreadsheetId=SAMPLE_SPREADSHEET_ID,
-        range=range_insert_mvm,
-        valueInputOption="RAW",
-        body=body).execute()
+        insert_single_cell(dict_ids[id], col_simulator_filename,simulator_test_name, service )
+        insert_single_cell(dict_ids[id], col_mvm_filename,mvm_test_name, service )
         
     
 if __name__ == '__main__':
