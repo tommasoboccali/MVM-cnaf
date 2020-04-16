@@ -13,3 +13,11 @@ credentials.json
 token.pickle
 
 do NOT commit them!
+
+the Gsheet used for test is
+
+https://docs.google.com/spreadsheets/d/1MlOhG-UhXlK3htq4FqL0nN0yrl0ubAj0jRHXY4Ki6ro/edit
+
+in paticular tab 
+
+20200412 ISO
