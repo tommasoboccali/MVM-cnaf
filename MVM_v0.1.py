@@ -4,6 +4,7 @@ import os.path
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
+import sys
 
 # If modifying these scopes, delete the file token.pickle.
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
@@ -73,6 +74,7 @@ def main():
 
     if not values:
         print('No data found.')
+        sys.exit(2)
     else:
         num=0
         headers = []
@@ -101,12 +103,9 @@ def main():
                 continue
             if col_simulator_filename ==-1 or col_mvm_filename==-1:
                 print ("ERROR: could not find filename columns", col_simulator_filename,col_mvm_filename)
+                sys.exit(1)
 #            print('%s %s %s %s' % ("ID", row[0], row[col_simulator_filename], row[col_mvm_filename]))
 
-            if (values[row][col_simulator_filename]== "" or values[row][col_mvm_filename]==""):
-                print('%s %s %s' % ("ID", values[row][0], " AVAILABLE FOR INSERTION"))
-            else:
-                print('%s %s %s' % ("ID", values[row][0], " has proper files"))
             dict_ids[values[row][0]] =row 
 
     # write PIPPO in cel in row 7

@@ -10,6 +10,7 @@ from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 import sys
+import os
 
 from gsheet_actions import *
 
@@ -28,19 +29,27 @@ def printForm(IDs, BadIDs):
     print(form_template.format(options=options))
 
 
-def receiveAndSaveToGoogleSheet(dict_ids, col_simulator_filename, col_mvm_filename, col_other_filename, service, SAMPLE_SPREADSHEET_ID):
+def receiveAndSaveToGoogleSheet(dict_ids, col_simulator_filename, col_mvm_filename, service, SAMPLE_SPREADSHEET_ID):
     print("Content-Type: text/html\n\n")
     testID = form.getvalue("TestID")
     file_simulator = form['file1']
-    file_mvm = form['file2']
-    file_other = form['file3']
-    
+    file_simulator_2 = form['file2']
+    file_mvm = form['file3']
+    #
+    # i issue an error if the first two are different suffix apart
+    #
+    if (os.path.splitext(file_simulator.filename)[0] != os.path.splitext(file_simulator_2.filename)[0]):
+        print ("ERROR! The two simulator files should have the same name apart from the suffix. I got ",file_simulator.filename, file_simulator_2.filename)
+        sys.exit(3)
+        filename_simulator_no_suffix = os.path.splitext(file_simulator.filename)[0]
+#
+# I have to refuse doing anything if sfirst and second are differen
 #    if file_simulator.filename :
 #        open('/dev/null', 'wb').write(file_simulator.file.read()) #FIXME: do something better than writing to dev null
 #    if file_mvm.filename :
 #        open('/dev/null', 'wb').write(file_mvm.file.read()) #FIXME: do something better than writing to dev null
-#    if file_other.filename :
-#        open('/dev/null', 'wb').write(file_other.file.read()) #FIXME: do something better than writing to dev null
+#    if file_simulator_2xs.filename :
+#        open('/dev/null', 'wb').write(file_simulator_2.file.read()) #FIXME: do something better than writing to dev null
     
     print("Test id is %s, I better write that to google sheet<bR>"%(testID))
     print("Upload was ok")
@@ -50,15 +59,14 @@ def receiveAndSaveToGoogleSheet(dict_ids, col_simulator_filename, col_mvm_filena
     print("Filling the gsheet")
     print ("Test ID = " ,testID )
     print ("F_SIM = " , file_simulator.filename)
+    print ("F_SI2 = " ,file_simulator_2.filename )
     print ("F_MVM = " ,file_mvm.filename )
-    print ("F_OTH = " ,file_other.filename )
 
-# simulator:
-    insert_single_cell(dict_ids[testID], col_simulator_filename,file_simulator.filename, service, SAMPLE_SPREADSHEET_ID )
+# simulator 1 and 2 ....
+    insert_single_cell(dict_ids[testID], col_simulator_filename,filename_simulator_no_suffix, service, SAMPLE_SPREADSHEET_ID )
 # mvm
     insert_single_cell(dict_ids[testID], col_mvm_filename,file_simulator.filename, service, SAMPLE_SPREADSHEET_ID )
-# other
-    insert_single_cell(dict_ids[testID], col_other_filename,file_other.filename, service, SAMPLE_SPREADSHEET_ID )
+
 
 def main():
     # The ID and range of a sample spreadsheet.
@@ -98,12 +106,12 @@ def main():
                         col_other_filename = col
             # Print columns A and E, which correspond to indices 0 and 4.
                 continue
-            if col_simulator_filename ==-1 or col_mvm_filename==-1  or col_other_filename==-1:
+            if col_simulator_filename ==-1 or col_mvm_filename==-1:
                 print ("ERROR: could not find filename columns", col_simulator_filename,col_mvm_filename)
 #            print('%s %s %s %s' % ("ID", row[0], row[col_simulator_filename], row[col_mvm_filename]))
                 sys.exit(1)
 
-            if (values[row][col_simulator_filename]== "" or values[row][col_mvm_filename]=="" ): #SHOULD APPEND A THIRD OR/AND
+            if (values[row][col_simulator_filename]== "" or values[row][col_mvm_filename]=="" ):
                 IDs.append(values[row][0])
             else:
                 BadIDs.append(values[row][0])
@@ -112,7 +120,7 @@ def main():
     
 
     if "submit" in form.keys():
-        receiveAndSaveToGoogleSheet(dict_ids, col_simulator_filename, col_mvm_filename, col_other_filename, service, SAMPLE_SPREADSHEET_ID)
+        receiveAndSaveToGoogleSheet(dict_ids, col_simulator_filename, col_mvm_filename, service, SAMPLE_SPREADSHEET_ID)
     else:
         printForm(IDs,BadIDs)
 
