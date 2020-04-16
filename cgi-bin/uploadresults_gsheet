@@ -1,0 +1,121 @@
+#!/usr/bin/env python3
+import cgi, os
+import cgitb; cgitb.enable()
+form = cgi.FieldStorage()
+
+#for gsheet
+import pickle
+import os.path
+from googleapiclient.discovery import build
+from google_auth_oauthlib.flow import InstalledAppFlow
+from google.auth.transport.requests import Request
+import sys
+
+from gsheet_actions import *
+
+
+def printForm(IDs, BadIDs):
+    form_template_file=open ("templates/form.html", "r")
+    form_template=form_template_file.read()
+
+    print("Content-Type: text/html\n\n")
+    options=""
+    for i in IDs :
+      options+='<option value="%s">%s</option>' %(i,i)
+
+    for i in BadIDs :
+        options+='<option style="color: #cccccc; background-color:#FF0000"  value="%s">%s</option>' %(i,i)
+    print(form_template.format(options=options))
+
+
+def receiveAndSaveToGoogleSheet(dict_ids, col_simulator_filename, col_mvm_filename, col_other_filename, service, SAMPLE_SPREADSHEET_ID):
+    print("Content-Type: text/html\n\n")
+    testID = form.getvalue("TestID")
+    file_simulator = form['file1']
+    file_mvm = form['file2']
+    file_other = form['file3']
+    
+#    if file_simulator.filename :
+#        open('/dev/null', 'wb').write(file_simulator.file.read()) #FIXME: do something better than writing to dev null
+#    if file_mvm.filename :
+#        open('/dev/null', 'wb').write(file_mvm.file.read()) #FIXME: do something better than writing to dev null
+#    if file_other.filename :
+#        open('/dev/null', 'wb').write(file_other.file.read()) #FIXME: do something better than writing to dev null
+    
+    print("Test id is %s, I better write that to google sheet<bR>"%(testID))
+    print("Upload was ok")
+    #
+    # now I fix them in the gsheet
+    #
+    print("Filling the gsheet")
+    print ("Test ID = " ,testID )
+    print ("F_SIM = " , file_simulator.filename)
+    print ("F_MVM = " ,file_mvm.filename )
+    print ("F_OTH = " ,file_other.filename )
+
+# simulator:
+    insert_single_cell(dict_ids[testID], col_simulator_filename,file_simulator.filename, service, SAMPLE_SPREADSHEET_ID )
+# mvm
+    insert_single_cell(dict_ids[testID], col_mvm_filename,file_simulator.filename, service, SAMPLE_SPREADSHEET_ID )
+# other
+    insert_single_cell(dict_ids[testID], col_other_filename,file_other.filename, service, SAMPLE_SPREADSHEET_ID )
+
+def main():
+    # The ID and range of a sample spreadsheet.
+    SAMPLE_SPREADSHEET_ID = '1MlOhG-UhXlK3htq4FqL0nN0yrl0ubAj0jRHXY4Ki6ro'
+    SAMPLE_RANGE_NAME = '20200412 ISO!A:AR'
+
+    service  = initGsheet(SAMPLE_SPREADSHEET_ID)
+    values = getRange(service,SAMPLE_SPREADSHEET_ID,SAMPLE_RANGE_NAME )
+
+    IDs=[]
+    BadIDs = []
+    if not values:
+        print('No data found.')
+        sys.exit(2)
+    else:
+        num=0
+        headers = []
+        col_simulator_filename=-1
+        col_mvm_filename=-1
+        col_other_filename=33
+        dict_ids = {}
+        for row in range(0,len(values)):
+            num=num+1
+            if num <= 2 :
+                #this is the ISO requirement line
+                continue
+            if num ==3 :
+                for col in range(0,len(values[row])):
+                    if values[row][col]  == "":
+                        continue
+                    headers.append(values[row][col])
+                    if values[row][col] == "simulator_filename":
+                        col_simulator_filename = col
+                    if values[row][col] == "MVM_filename":
+                        col_mvm_filename = col
+                    if values[row][col] == "OTHER_filename":
+                        col_other_filename = col
+            # Print columns A and E, which correspond to indices 0 and 4.
+                continue
+            if col_simulator_filename ==-1 or col_mvm_filename==-1  or col_other_filename==-1:
+                print ("ERROR: could not find filename columns", col_simulator_filename,col_mvm_filename)
+#            print('%s %s %s %s' % ("ID", row[0], row[col_simulator_filename], row[col_mvm_filename]))
+                sys.exit(1)
+
+            if (values[row][col_simulator_filename]== "" or values[row][col_mvm_filename]=="" ): #SHOULD APPEND A THIRD OR/AND
+                IDs.append(values[row][0])
+            else:
+                BadIDs.append(values[row][0])
+
+            dict_ids[values[row][0]] =row 
+    
+
+    if "submit" in form.keys():
+        receiveAndSaveToGoogleSheet(dict_ids, col_simulator_filename, col_mvm_filename, col_other_filename, service, SAMPLE_SPREADSHEET_ID)
+    else:
+        printForm(IDs,BadIDs)
+
+if __name__ == '__main__':
+    main()
+
