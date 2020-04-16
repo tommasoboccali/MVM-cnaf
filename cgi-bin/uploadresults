@@ -16,7 +16,7 @@ def printForm():
       options+='<option value="%s">%s</option>' %(i,i)
 
     for i in BadIDs :
-      options+='<option style="color: #cccccc"  value="%s">%s</option>' %(i,i)
+        options+='<option style="color: #cccccc; background-color:#FF0000"  value="%s">%s</option>' %(i,i)
     print(form_template.format(options=options))
 
 
