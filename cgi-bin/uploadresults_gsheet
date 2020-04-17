@@ -37,7 +37,6 @@ def receiveAndSaveToGoogleSheet(dict_ids, col_simulator_filenames, col_mvm_filen
     campaign = form.getvalue("Campaign")
     mvmonlyR = form.getvalue("mvmonly")
     mvmonly = True
-    print ("9999999   ",mvmonlyR)
     if mvmonlyR:
         mvmonly = True
     else:

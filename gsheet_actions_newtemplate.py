@@ -155,7 +155,7 @@ def getIDsFromSheet(SAMPLE_SPREADSHEET_ID,Suffix_SAMPLE_RANGE_NAME, service, she
                      print ("Campaign not defined for ID",values[row][0])
                    continue
 
-            if (values[row][col_simulator_filename]== "" or values[row][col_mvm_filename]==""):
+            if (values[row][col_simulator_filename]== "" and values[row][col_mvm_filename]==""):
                 if (VERB==True):
                     print ("*  ID ", s, values[row][0], " Campaign",(values[row][col_campaign] ))
 #                    print('%s %s %s %s' % ("* ID ", s, values[row][0], " Campaign",values[row][col_campaign[s]] ))
