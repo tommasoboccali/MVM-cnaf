@@ -2,6 +2,8 @@
 import cgi, os
 import cgitb; cgitb.enable()
 import json
+import pathlib
+
 from datetime import datetime
 form = cgi.FieldStorage()
 
@@ -18,7 +20,7 @@ from gsheet_actions_newtemplate import *
 
 
 def printForm(opU,opF):
-    form_template_file=open ("templates/form.html", "r")
+    form_template_file=open ("../templates/form.html", "r")
     form_template=form_template_file.read()
     print("Content-Type: text/html\n\n")
 
@@ -31,7 +33,7 @@ def printForm(opU,opF):
 
 def receiveAndSaveToGoogleSheet(dict_ids, col_simulator_filenames, col_mvm_filenames, col_campaigns, col_daqs, col_firmwares, col_comments,service, SAMPLE_SPREADSHEET_ID, all_s,VERB=False):
 
-    CNAF_Prefix ='Some_prefix'
+    CNAF_Prefix ='/storage/mvm/data/'
     print("Content-Type: text/html\n\n")
     testID = form.getvalue("TestID")
     site = form.getvalue("Site")
@@ -53,10 +55,15 @@ def receiveAndSaveToGoogleSheet(dict_ids, col_simulator_filenames, col_mvm_filen
         sys.exit(3)
     filename_simulator_no_suffix = os.path.splitext(file_DTA.filename)[0]
 
-    path_at_CNAF = CNAF_Prefix + '/' + site+ '/'+campaign+ '/'+testID
+    path_at_CNAF = CNAF_Prefix + '/' + site+ '/'+campaign+ '/'+testID+'/'
+#mkdir this path
+    pathlib.Path(path_at_CNAF).mkdir(parents=True, exist_ok=True)
 
-        #
-# I have to refuse doing anything if sfirst and second are differen
+    if mvmonly == False:
+        open(path_at_CNAF+file_DTA.filename, 'wb').write(file_DTA.file.read())    
+        open(path_at_CNAF+file_RWA.filename, 'wb').write(file_RWA.file.read())
+    open(path_at_CNAF+file_mvm.filename, 'wb').write(file_mvm.file.read())
+
 #    if file_simulator.filename :
 #        open('/dev/null', 'wb').write(file_simulator.file.read()) #FIXME: do something better than writing to dev null
 #    if file_mvm.filename :
@@ -64,7 +71,7 @@ def receiveAndSaveToGoogleSheet(dict_ids, col_simulator_filenames, col_mvm_filen
 #    if file_simulator_2xs.filename :
 #        open('/dev/null', 'wb').write(file_simulator_2.file.read()) #FIXME: do something better than writing to dev null
     
-    print("Upload was ok<br>")
+    print("File Upload was ok<br>")
     #
     # now I fix them in the gsheet
     #
@@ -122,8 +129,9 @@ def receiveAndSaveToGoogleSheet(dict_ids, col_simulator_filenames, col_mvm_filen
     # dump to json
 
 #    print (dict_json)
-    with open('result.json', 'w') as fp:
+    with open(path_at_CNAF+'result.json', 'w') as fp:
         json.dump(dict_json, fp)
+    print("JSON Upload was ok<br>")
     #
     # upload also this
     #
@@ -132,7 +140,7 @@ def receiveAndSaveToGoogleSheet(dict_ids, col_simulator_filenames, col_mvm_filen
 
 #    print ('===================', dict_ids[site][(testID,campaign)][0])   
         
-        if (mvmonly==False):
+    if (mvmonly==False):
             insert_single_cell(dict_ids[site][(testID,campaign)][0], col_simulator_filenames[site],filename_simulator_no_suffix, service,site, SAMPLE_SPREADSHEET_ID, VERB=VERB )
             print ("XLS Edited with Simulator Filenames!<br>")
 
