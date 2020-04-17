@@ -1,23 +1,23 @@
 <html>
 	<head>
 	  <script type="text/javascript" src="../js/functions.js"></script>
-          <style type = "text/css"> 
+          <style type = "text/css">
             .thick{{font-size:20px;}}
-            .button{{background-color: #0074e8; /* Blue */
+            .medium{{font-size:16px;}}
+            .button{{background-color: #65a1fb; /* Blue */
                      font-size: 16px;
                      border-radius: 8px;
                     }}
             .button1:hover {{
-                box-shadow: 0 8px 16px 0 rgba(0,0,0,0.24),0 17px 50px 0 rgba(0,0,0,0.19);
+                box-shadow: 0 6px 12px 0 rgba(0,0,0,0.24),0 17px 50px 0 rgba(0,0,0,0.19);
                                }}
           </style> 
 	</head>
 	
 	<body onload=updateCampaign()>
           <script>var optionsMap = {options_map}</script>
-          <p class = "thick">
-	   <form name="uploadForm" method="post" enctype="multipart/form-data" onsubmit="return validateForm()">
-             <table>
+	   <form class = "thick" name="uploadForm" method="post" enctype="multipart/form-data" onsubmit="return validateForm()">
+             <table cellspacing="10">
                <tr>
                  <th> Select Test Site </th>
                  <th> Select Test Campaign </th>
@@ -25,28 +25,27 @@
                </tr>
               <tr>
                 <th>
-	          <select id="selectSite" name="Site" onchange='updateCampaign()'>
+	          <select id="selectSite" name="Site" onchange='updateCampaign()' class="medium">
 	            {options_Site}
 	          </select>
                 </th><th>
-	          <select id="selectCampaign" name="Campaign" onchange='updateTestID()'>
+	          <select id="selectCampaign" name="Campaign" onchange='updateTestID()' class="medium">
 	          </select>
                 </th><th>
-	          <select id="selectTestID" name="TestID"></select>
+	          <select id="selectTestID" name="TestID" class="medium"></select>
                 </th>
               </tr>
              </table>
              <br>
-             <table>
-               <tr><th> Upload MVM only </th><th> <input type="checkbox" name=mvmonly> </th></tr>
-	       <tr><th> File Simulator DTA </th><th> <input type="file" name="file1" id="file1"></th></tr>
-	       <tr><th> File Simulator RWA </th><th> <input type="file" name="file2" id="file2"></th></tr>
-	       <tr><th> File MVM           </th><th> <input type="file" name="file3" id="file3"></th></tr>
+             <table cellspacing="10">
+               <tr><th> Upload MVM only </th><th> <input type="checkbox" name="mvmonly"> </th></tr>
+	       <tr><th> File Simulator DTA </th><th> <input type="file" name="file1" id="file1" class="medium"></th></tr>
+	       <tr><th> File Simulator RWA </th><th> <input type="file" name="file2" id="file2" class="medium"></th></tr>
+	       <tr><th> File MVM           </th><th> <input type="file" name="file3" id="file3" class="medium"></th></tr>
+               
              </table>
 
 	    <input class="button button1" type="submit" value="Upload >>" name="submit" >
 	   </form>
-           </p>
 	<body>
 </html>
-
