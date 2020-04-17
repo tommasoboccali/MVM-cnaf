@@ -202,6 +202,33 @@ def getIDsForm(SAMPLE_SPREADSHEET_ID,Suffix_SAMPLE_RANGE_NAME,service, VERB=True
             if campaign not in optionmap[site]:
                 optionmap[site][campaign]={}
             optionmap[site][campaign][id]=filled
-    return optionmap
-                
+
+    optionmapFILLED={}
+    optionmapUNFILLED={}
+    for s1 in optionmap:
+        site = s1
+        rest1 = optionmap[site]
+        for s2 in rest1:
+            campaign = s2
+            rest2 = optionmap[site][campaign]
+            for s3 in rest2:
+                id = s3
+                filled = optionmap[site][campaign][id]
+                if filled == True:
+                    if site not in optionmapFILLED:
+                        optionmapFILLED[site] = {}
+                    if campaign not in optionmapFILLED[site]:
+                        optionmapFILLED[site][campaign]=[]
+                    optionmapFILLED[site][campaign].append(id)
+                if filled == False:
+                    if site not in optionmapUNFILLED:
+                        optionmapUNFILLED[site] = {}
+                    if campaign not in optionmapUNFILLED[site]:
+                        optionmapUNFILLED[site][campaign]=[]
+                    optionmapUNFILLED[site][campaign].append(id)
+            
+            
+    return (optionmap, optionmapFILLED,optionmapUNFILLED)
+
+
             

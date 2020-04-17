@@ -16,9 +16,11 @@ def main():
 
     service  = initGsheet(SAMPLE_SPREADSHEET_ID)
 
-    optionmap = getIDsForm(SAMPLE_SPREADSHEET_ID,Suffix_SAMPLE_RANGE_NAME,service, VERB=False)
+    (optionmap, opF, opU) = getIDsForm(SAMPLE_SPREADSHEET_ID,Suffix_SAMPLE_RANGE_NAME,service, VERB=False)
 
-    print(optionmap)
+    print(" GLOBAL", optionmap)
+    print(" FILLED", opF)
+    print(" UNFILD", opU)
 
 
     
