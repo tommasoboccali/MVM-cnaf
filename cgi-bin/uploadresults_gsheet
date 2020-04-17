@@ -27,7 +27,7 @@ def printForm(opU,opF):
     print(form_template.format(options_map=json.dumps(opU),options_Site=options_Site))
 
 
-def receiveAndSaveToGoogleSheet(dict_ids, col_simulator_filenames, col_mvm_filenames, col_campaigns, service, SAMPLE_SPREADSHEET_ID, VERB=False):
+def receiveAndSaveToGoogleSheet(dict_ids, col_simulator_filenames, col_mvm_filenames, col_campaigns, service, SAMPLE_SPREADSHEET_ID, all_s, VERB=False):
     print("Content-Type: text/html\n\n")
     testID = form.getvalue("TestID")
     site = form.getvalue("Site")
@@ -52,24 +52,27 @@ def receiveAndSaveToGoogleSheet(dict_ids, col_simulator_filenames, col_mvm_filen
 #    if file_simulator_2xs.filename :
 #        open('/dev/null', 'wb').write(file_simulator_2.file.read()) #FIXME: do something better than writing to dev null
     
-    print("Test id is %s, I better write that to google sheet<bR>"%(testID))
-    print("Upload was ok")
+    print("Upload was ok<br>")
     #
     # now I fix them in the gsheet
     #
-    print("Filling the gsheet")
-    print ("SITE    = " , site)
-    print ("CAMPAIGN=    = " , campaign)
-    print ("Test ID = " ,testID )
-    print ("F_SIM = " , file_simulator.filename)
-    print ("F_SI2 = " ,file_simulator_2.filename )
-    print ("F_MVM = " ,file_mvm.filename )
-    print ("MVMONLY = " , mvmonly )
+    print("Filling the gsheet", '<br>')
+    print ("SITE    = " , site, '<br>')
+    print ("CAMPAIGN=    = " , campaign, '<br>')
+    print ("Test ID = " ,testID , '<br>')
+    print ("F_SIM = " , file_simulator.filename, '<br>')
+    print ("F_SI2 = " ,file_simulator_2.filename , '<br>')
+    print ("F_MVM = " ,file_mvm.filename , '<br>')
+    print ("MVMONLY = " , mvmonly , '<br>')
+
+#
+# now prepare the JSON, startis from all
+#
 
 # simulator 1 and 2 ....
-    insert_single_cell(dict_ids[testID], col_simulator_filename,filename_simulator_no_suffix, service, SAMPLE_SPREADSHEET_ID )
+#    insert_single_cell(dict_ids[testID], col_simulator_filename,filename_simulator_no_suffix, service, SAMPLE_SPREADSHEET_ID )
 # mvm
-    insert_single_cell(dict_ids[testID], col_mvm_filename,file_simulator.filename, service, SAMPLE_SPREADSHEET_ID )
+#    insert_single_cell(dict_ids[testID], col_mvm_filename,file_simulator.filename, service, SAMPLE_SPREADSHEET_ID )
 
 
 def main():
@@ -84,7 +87,7 @@ def main():
 
 
     if "submit" in form.keys():
-        receiveAndSaveToGoogleSheet(dict_ids, col_simulator_filenames, col_mvm_filenames, col_campaigns, service, SAMPLE_SPREADSHEET_ID, False)
+        receiveAndSaveToGoogleSheet(dict_ids, col_simulator_filenames, col_mvm_filenames, col_campaigns, service, SAMPLE_SPREADSHEET_ID, all_s,False)
     else:
         printForm(opU,opF)
 
