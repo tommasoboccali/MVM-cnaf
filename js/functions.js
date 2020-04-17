@@ -1,7 +1,14 @@
 function validateForm() {
     var f1=document.forms["uploadForm"]["file1"].value;
-    if(f1=="") {
-        alert("Need to provide a file1");
+    var f2=document.forms["uploadForm"]["file2"].value;
+    var f3=document.forms["uploadForm"]["file3"].value;
+    var mvmonly=document.forms["uploadForm"]["file3"].checked;
+    if((f1=="" || f2=="" || f3=="") && mvmonly==false  ) {
+        alert("Need to provide three files");
+        return false;
+    }
+    if((f3=="") && mvmonly==true  ) {
+        alert("Need to provide the MVM file");
         return false;
     }
     return true;
