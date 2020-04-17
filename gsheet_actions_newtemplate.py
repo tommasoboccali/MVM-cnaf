@@ -84,9 +84,6 @@ def getRange(service,SAMPLE_SPREADSHEET_ID, SAMPLE_RANGE_NAME ):
 def getIDsFromSheet(SAMPLE_SPREADSHEET_ID,Suffix_SAMPLE_RANGE_NAME, service, sheet_name, VERB=True):
 
     
-    col_simulator_filename = {}
-    col_mvm_filename={}
-    col_campaign = {}
     dict_ids = {}
     s = sheet_name
     
@@ -97,13 +94,16 @@ def getIDsFromSheet(SAMPLE_SPREADSHEET_ID,Suffix_SAMPLE_RANGE_NAME, service, she
     if not values:
             if (VERB==True):
                 print('No data found in Sheet, skipping ....',s)
-                return (False, False, False, False)
+                return (False, False, False, False, False, False, False, False)
 
     num=0
     headers = []
     col_simulator_filename=-1
     col_mvm_filename=-1
     col_campaign=-1
+    col_daq =-1
+    col_firmware =-1
+    col_comment=-1
     dict_id = {}
     for row in range(0,len(values)):
 #            print (row)
@@ -120,6 +120,13 @@ def getIDsFromSheet(SAMPLE_SPREADSHEET_ID,Suffix_SAMPLE_RANGE_NAME, service, she
                         col_mvm_filename = col
                     if values[row][col] == "campaign":
                         col_campaign = col
+                    if values[row][col] == "DAQ version":
+                        col_daq = col
+                    if values[row][col] == "MVM Firmware":
+                        col_firmware = col
+                    if values[row][col] == "Comment":
+                        col_comment = col
+                        
                 continue
             if values[row][0]  == "":
                 if (VERB==True):
@@ -127,14 +134,14 @@ def getIDsFromSheet(SAMPLE_SPREADSHEET_ID,Suffix_SAMPLE_RANGE_NAME, service, she
                 continue
 
             #        print (col_simulator_filename[s], col_mvm_filename[s] )
-            if col_simulator_filename ==-1 or col_mvm_filename==-1 or col_campaign==-1:
+            if col_simulator_filename ==-1 or col_mvm_filename==-1 or col_campaign==-1   or col_comment ==-1 or col_firmware ==-1  or col_daq ==-1 :
                 if (VERB==True):
                     print ("Skipping sheet",s, ", does not contain filename or campaign columns")
-                return (False, False, False, False, False)
+                return (False, False, False, False, False, False, False, False)
 #
 # check if all the colums have at least the length       
 #
-            if (len(values[row])<col_simulator_filename or len(values[row])<col_mvm_filename or len(values[row])<col_campaign ):
+            if (len(values[row])<col_simulator_filename or len(values[row])<col_mvm_filename or len(values[row])<col_campaign or len(values[row])<col_daq or len(values[row])<col_firmware or len(values[row])<col_comment):
                if (VERB==True):
                  print ("ROW malformed (too short)")
                continue
@@ -158,7 +165,7 @@ def getIDsFromSheet(SAMPLE_SPREADSHEET_ID,Suffix_SAMPLE_RANGE_NAME, service, she
 #                    print('%s %s %s %s' % ("  ID ", s, values[row][0], " Campaign",(values[row][col_campaign[s]] )))
                     
                 dict_id[(values[row][0],values[row][col_campaign])] =(row,True)
-    return   (dict_id,col_simulator_filename,col_mvm_filename,col_campaign, values)
+    return   (dict_id,col_simulator_filename,col_mvm_filename,col_campaign, col_daq, col_firmware, col_comment, values)
 
 
 def getIDsFromMultipleSheets(SAMPLE_SPREADSHEET_ID,Suffix_SAMPLE_RANGE_NAME, service,VERB=True):
@@ -169,18 +176,25 @@ def getIDsFromMultipleSheets(SAMPLE_SPREADSHEET_ID,Suffix_SAMPLE_RANGE_NAME, ser
     col_simulator_filenames = {}
     col_mvm_filenames = {}
     col_campaigns = {}
+    col_comments={}
+    col_daqs= {}
+    col_firmwares = {}
     all_s = {}
     for s in sheet_names:
         if (VERB==True):
-            print ("----------Studying SHEET", s)
-        (dict_id,col_simulator_filename,col_mvm_filename,col_campaign, all) = getIDsFromSheet(SAMPLE_SPREADSHEET_ID,Suffix_SAMPLE_RANGE_NAME, service, s, VERB)
+            print ("----------Studyng SHEET", s)
+        (dict_id,col_simulator_filename,col_mvm_filename,col_campaign, col_daq, col_firmware, col_comment, all) = getIDsFromSheet(SAMPLE_SPREADSHEET_ID,Suffix_SAMPLE_RANGE_NAME, service, s, VERB)
         dict_ids[s] = dict_id
         col_simulator_filenames[s]=col_simulator_filename
         col_mvm_filenames[s]=col_mvm_filename
         col_campaigns[s]= col_campaign
+        col_comments[s]=col_comment
+        col_daqs[s]=col_daq
+        col_firmwares[s]=col_firmware
+
         all_s[s]= all
 
-    return (dict_ids,col_simulator_filenames,col_mvm_filenames,col_campaigns, all_s)
+    return (dict_ids,col_simulator_filenames,col_mvm_filenames,col_campaigns,col_daqs, col_firmwares, col_comments, all_s)
 
 def getIDsForm(dict_ids, VERB=True):
     

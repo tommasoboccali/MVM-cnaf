@@ -16,7 +16,7 @@ def main():
 
     
     service  = initGsheet(SAMPLE_SPREADSHEET_ID)
-    (dict_ids,col_simulator_filenames,col_mvm_filenames,col_campaigns, all_s) = getIDsFromMultipleSheets(SAMPLE_SPREADSHEET_ID,Suffix_SAMPLE_RANGE_NAME, service,VERB=False)
+    (dict_ids,col_simulator_filenames,col_mvm_filenames,col_campaigns, col_daqs, col_firmwares, col_comments,all_s) = getIDsFromMultipleSheets(SAMPLE_SPREADSHEET_ID,Suffix_SAMPLE_RANGE_NAME, service,VERB=False)
 
     (optionmap, opF, opU) = getIDsForm(dict_ids, VERB=False)
 
@@ -24,7 +24,8 @@ def main():
     print(" FILLED", opF)
     print(" UNFILD", opU)
 
-
+    print(dict_ids)
+    print (all_s)
     
     #(dict_ids,col_simulator_filenames,col_mvm_filenames,col_campaigns,all_s) = getIDsFromMultipleSheets(SAMPLE_SPREADSHEET_ID,Suffix_SAMPLE_RANGE_NAME, service, VERB=True)
     #print (dict_ids)
