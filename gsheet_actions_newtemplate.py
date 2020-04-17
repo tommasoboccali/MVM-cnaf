@@ -18,14 +18,15 @@ def colnum_string(n):
         string = chr(65 + remainder) + string
     return string
 
-def insert_single_cell(row, column, text, service,SAMPLE_SPREADSHEET_ID ):
+def insert_single_cell(row, column, text, service, sheet, SAMPLE_SPREADSHEET_ID, VERB=False ):
 
     colnum_str = colnum_string(column+1)
     row_insert = row+1
     body = {'values': [[text]]}
-    range_insert = '20200412 ISO!'+colnum_str+str(row_insert)+":"+colnum_str+str(row_insert)
+    range_insert = sheet+'!'+colnum_str+str(row_insert)+":"+colnum_str+str(row_insert)
 
-    print ("Inserting ",text , " in rage", range_insert )
+    if VERB==True:
+        print ("Inserting ",text , " in rage", range_insert )
     
     result = service.spreadsheets().values().update(spreadsheetId=SAMPLE_SPREADSHEET_ID,
         range=range_insert,

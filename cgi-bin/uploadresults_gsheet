@@ -35,7 +35,13 @@ def receiveAndSaveToGoogleSheet(dict_ids, col_simulator_filenames, col_mvm_filen
     testID = form.getvalue("TestID")
     site = form.getvalue("Site")
     campaign = form.getvalue("Campaign")
-    mvmonly = form.getvalue("mvmonly")
+    mvmonlyR = form.getvalue("mvmonly")
+    mvmonly = True
+    print ("9999999   ",mvmonlyR)
+    if mvmonlyR:
+        mvmonly = True
+    else:
+        mvmonly = False
     file_DTA = form['file1']
     file_RWA = form['file2']
     file_mvm = form['file3']
@@ -45,7 +51,7 @@ def receiveAndSaveToGoogleSheet(dict_ids, col_simulator_filenames, col_mvm_filen
     if (os.path.splitext(file_DTA.filename)[0] != os.path.splitext(file_RWA.filename)[0]):
         print ("ERROR! The two simulator files should have the same name apart from the suffix. I got ",file_simulator.filename, file_simulator_2.filename)
         sys.exit(3)
-        filename_simulator_no_suffix = os.path.splitext(file_DTA.filename)[0]
+    filename_simulator_no_suffix = os.path.splitext(file_DTA.filename)[0]
 
     path_at_CNAF = CNAF_Prefix + '/' + site+ '/'+campaign+ '/'+testID
 
@@ -111,7 +117,7 @@ def receiveAndSaveToGoogleSheet(dict_ids, col_simulator_filenames, col_mvm_filen
     dict_json["has_simulator"] =  1 if mvmonly == False else 0
     # dump to json
 
-    print (dict_json)
+#    print (dict_json)
     with open('result.json', 'w') as fp:
         json.dump(dict_json, fp)
     #
@@ -119,9 +125,16 @@ def receiveAndSaveToGoogleSheet(dict_ids, col_simulator_filenames, col_mvm_filen
     #
 
 # simulator 1 and 2 ....
-#    insert_single_cell(dict_ids[testID], col_simulator_filename,filename_simulator_no_suffix, service, SAMPLE_SPREADSHEET_ID )
+
+#    print ('===================', dict_ids[site][(testID,campaign)][0])   
+        
+        if (mvmonly==False):
+            insert_single_cell(dict_ids[site][(testID,campaign)][0], col_simulator_filenames[site],filename_simulator_no_suffix, service,site, SAMPLE_SPREADSHEET_ID, VERB=VERB )
+            print ("XLS Edited with Simulator Filenames!<br>")
+
 # mvm
-#    insert_single_cell(dict_ids[testID], col_mvm_filename,file_simulator.filename, service, SAMPLE_SPREADSHEET_ID )
+    insert_single_cell(dict_ids[site][(testID,campaign)][0], col_mvm_filenames[site],file_mvm.filename, service, site,  SAMPLE_SPREADSHEET_ID ,VERB=VERB)
+    print ("XLS Edited with MVM Filename!<br>")
 
 
 def main():
