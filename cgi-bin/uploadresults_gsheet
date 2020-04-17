@@ -11,37 +11,28 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 import sys
 import os
-
+import json
 from gsheet_actions_newtemplate import *
 
 
 def printForm(opU,opF):
     form_template_file=open ("templates/form.html", "r")
     form_template=form_template_file.read()
-
     print("Content-Type: text/html\n\n")
-    options=""
-    for i in opU.keys() :
-      options+='<option value="%s">%s</option>' %(i,i)
 
-    for i in opF.keys() :
-        options+='<option style="color: #cccccc; background-color:#FF0000"  value="%s">%s</option>' %(i,i)
-
-    options_Campaign=""
-    options_TestID=[]
+    options_Site=""
     for i in opU.keys() :
-        options_Campaign+='<option value="%s">%s</option>' %(i,i)
-        options_TestID.append("")
-        for j in opU[i].keys() :
-            myvalue="%s"%(j)
-            options_TestID[-1]+="<option value=\'%s\'>%s</option>"%(myvalue,myvalue)
+        options_Site+='<option value="%s">%s</option>' %(i,i)
         
-    print(form_template.format(options_Campaign=options_Campaign, options=options, options_TestID=options_TestID))
+    print(form_template.format(options_map=json.dumps(opU),options_Site=options_Site))
 
 
 def receiveAndSaveToGoogleSheet(dict_ids, col_simulator_filename, col_mvm_filename, service, SAMPLE_SPREADSHEET_ID):
     print("Content-Type: text/html\n\n")
     testID = form.getvalue("TestID")
+    site = form.getvalue("Site")
+    campaign = form.getvalue("Campaign")
+    simonly = form.getvalue("simonly")
     file_simulator = form['file1']
     file_simulator_2 = form['file2']
     file_mvm = form['file3']

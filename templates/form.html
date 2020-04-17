@@ -3,17 +3,23 @@
 	<script type="text/javascript" src="../js/functions.js"></script>
 	</head>
 	
-	<body>
-          <script>var TestIDopts = {options_TestID}</script>
-	  <form name="uploadForm" method="post" enctype="multipart/form-data" onsubmit="return validateForm()">
-            <select id="selectCampaign" name="Campaign" onchange='updateTestID()'>
-	      {options_Campaign}
+	<body onload=updateCampaign()>
+          <script>var optionsMap = {options_map}</script>
+
+	   <form name="uploadForm" method="post" enctype="multipart/form-data" onsubmit="return validateForm()">
+
+	   <select id="selectSite" name="Site" onchange='updateCampaign()'>
+	      {options_Site}
+	    </select>
+	   <select id="selectCampaign" name="Campaign" onchange='updateTestID()'>
 	    </select>
 	    <select id="selectTestID" name="TestID">
 	    </select><br>
+	    Upload Simulator only <input type="checkbox" name=simonly> <br>
 	    File Simulator #1: <input type="file" name="file1" id="file1"><br>
 	    File Simulator #2: <input type="file" name="file2" id="file2"><br>
 	    File MVM         : <input type="file" name="file3" id="file3"><br>
+
 	    <input type="submit" value="Upload" name="submit" >
 	</form>
 	<body>
