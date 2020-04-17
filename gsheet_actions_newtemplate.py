@@ -81,35 +81,31 @@ def getRange(service,SAMPLE_SPREADSHEET_ID, SAMPLE_RANGE_NAME ):
     return values
 
 
-def getIDsFromAllSheets(SAMPLE_SPREADSHEET_ID,Suffix_SAMPLE_RANGE_NAME, service, VERB=True):
+def getIDsFromSheet(SAMPLE_SPREADSHEET_ID,Suffix_SAMPLE_RANGE_NAME, service, sheet_name, VERB=True):
 
     
     col_simulator_filename = {}
     col_mvm_filename={}
     col_campaign = {}
     dict_ids = {}
-
-    sheet_names = getSheetNames(service,SAMPLE_SPREADSHEET_ID)
- 
+    s = sheet_name
     
-    for s in sheet_names:
-#        if s != '20200403 MHRA':
-#            continue
-        SAMPLE_RANGE_NAME = s+Suffix_SAMPLE_RANGE_NAME
-        if (VERB==True):
+    SAMPLE_RANGE_NAME = s+Suffix_SAMPLE_RANGE_NAME
+    if (VERB==True):
             print ("----------Studying SHEET", s)
-        values = getRange(service,SAMPLE_SPREADSHEET_ID,SAMPLE_RANGE_NAME )
-        if not values:
+    values = getRange(service,SAMPLE_SPREADSHEET_ID,SAMPLE_RANGE_NAME )
+    if not values:
             if (VERB==True):
                 print('No data found in Sheet, skipping ....',s)
-            continue
-        num=0
-        headers = []
-        col_simulator_filename[s]=-1
-        col_mvm_filename[s]=-1
-        col_campaign[s]=-1
-        dict_id = {}
-        for row in range(0,len(values)):
+                return (False, False, False, False)
+
+    num=0
+    headers = []
+    col_simulator_filename=-1
+    col_mvm_filename=-1
+    col_campaign=-1
+    dict_id = {}
+    for row in range(0,len(values)):
 #            print (row)
             num=num+1
             if num <= 2 :
@@ -119,11 +115,11 @@ def getIDsFromAllSheets(SAMPLE_SPREADSHEET_ID,Suffix_SAMPLE_RANGE_NAME, service,
                 for col in range(0,len(values[row])):
                     headers.append(values[row][col])
                     if values[row][col] == "simulator_filename":
-                        col_simulator_filename[s] = col
+                        col_simulator_filename = col
                     if values[row][col] == "MVM_filename":
-                        col_mvm_filename[s] = col
+                        col_mvm_filename = col
                     if values[row][col] == "campaign":
-                        col_campaign[s] = col
+                        col_campaign = col
                 continue
             if values[row][0]  == "":
                 if (VERB==True):
@@ -131,15 +127,14 @@ def getIDsFromAllSheets(SAMPLE_SPREADSHEET_ID,Suffix_SAMPLE_RANGE_NAME, service,
                 continue
 
             #        print (col_simulator_filename[s], col_mvm_filename[s] )
-            if col_simulator_filename[s] ==-1 or col_mvm_filename[s]==-1 or col_campaign==-1:
+            if col_simulator_filename ==-1 or col_mvm_filename==-1 or col_campaign==-1:
                 if (VERB==True):
                     print ("Skipping sheet",s, ", does not contain filename or campaign columns")
-                continue
-
+                return (False, False, False, False, False)
 #
 # check if all the colums have at least the length       
 #
-            if (len(values[row])<col_simulator_filename[s] or len(values[row])<col_mvm_filename[s] or len(values[row])<col_campaign[s] ):
+            if (len(values[row])<col_simulator_filename or len(values[row])<col_mvm_filename or len(values[row])<col_campaign ):
                if (VERB==True):
                  print ("ROW malformed (too short)")
                continue
@@ -147,26 +142,66 @@ def getIDsFromAllSheets(SAMPLE_SPREADSHEET_ID,Suffix_SAMPLE_RANGE_NAME, service,
 #
 # ifthere is no campaign, go away
 #
-            if (values[row][col_campaign[s]] == ""):
+            if (values[row][col_campaign] == ""):
                    if (VERB==True):
                      print ("Campaign not defined for ID",values[row][0])
                    continue
 
-            if (values[row][col_simulator_filename[s]]== "" or values[row][col_mvm_filename[s]]==""):
+            if (values[row][col_simulator_filename]== "" or values[row][col_mvm_filename]==""):
                 if (VERB==True):
-                    print ("*  ID ", s, values[row][0], " Campaign",(values[row][col_campaign[s]] ))
-                    #print('%s %s %s %s' % ("* ID ", s, values[row][0], " Campaign",values[row][col_campaign[s]] ))
-                    dict_id[(values[row][0],values[row][col_campaign[s]])] =(row,False)
+                    print ("*  ID ", s, values[row][0], " Campaign",(values[row][col_campaign] ))
+#                    print('%s %s %s %s' % ("* ID ", s, values[row][0], " Campaign",values[row][col_campaign[s]] ))
+                dict_id[(values[row][0],values[row][col_campaign])] =(row,False)
             else:
                 if (VERB==True):
-                    print ("  ID ", s, values[row][0], " Campaign",(values[row][col_campaign[s]] ))
+                    print ("  ID ", s, values[row][0], " Campaign",(values[row][col_campaign] ))
 #                    print('%s %s %s %s' % ("  ID ", s, values[row][0], " Campaign",(values[row][col_campaign[s]] )))
                     
-                dict_id[values[row][0]] =(row,values[row][col_campaign[s]],True)
-        dict_ids[s]=dict_id
-    return   (dict_ids,col_simulator_filename,col_mvm_filename,col_campaign)
+                dict_id[(values[row][0],values[row][col_campaign])] =(row,True)
+    return   (dict_id,col_simulator_filename,col_mvm_filename,col_campaign, values)
 
 
-#
-# dict_ids is a map containing campaign, and then pairs of (id,filled) ... filled == True means there is already a filename
-#
+def getIDsFromMultipleSheets(SAMPLE_SPREADSHEET_ID,Suffix_SAMPLE_RANGE_NAME, service,VERB=True):
+
+    sheet_names = getSheetNames(service,SAMPLE_SPREADSHEET_ID)
+
+    dict_ids = {}
+    col_simulator_filenames = {}
+    col_mvm_filenames = {}
+    col_campaigns = {}
+    all_s = {}
+    for s in sheet_names:
+        if (VERB==True):
+            print ("----------Studying SHEET", s)
+        (dict_id,col_simulator_filename,col_mvm_filename,col_campaign, all) = getIDsFromSheet(SAMPLE_SPREADSHEET_ID,Suffix_SAMPLE_RANGE_NAME, service, s, VERB)
+        dict_ids[s] = dict_id
+        col_simulator_filenames[s]=col_simulator_filename
+        col_mvm_filenames[s]=col_mvm_filename
+        col_campaigns[s]= col_campaign
+        all_s[s]= all
+
+    return (dict_ids,col_simulator_filenames,col_mvm_filenames,col_campaigns, all_s)
+
+def getIDsForm(SAMPLE_SPREADSHEET_ID,Suffix_SAMPLE_RANGE_NAME,service, VERB=True):
+    
+    (dict_ids,col_simulator_filenames,col_mvm_filenames,col_campaigns, all_s) = getIDsFromMultipleSheets(SAMPLE_SPREADSHEET_ID,Suffix_SAMPLE_RANGE_NAME, service,VERB)
+    # I need to define options as a map
+    optionmap = {}
+    for site in dict_ids.keys():
+        if (VERB==True):
+            print ("Key ",site)
+            print (dict_ids[site].values())
+        optionmap[site]={}
+        for key in  dict_ids[site]:
+            value = dict_ids[site][key]
+            campaign = key[1]
+            id=key[0]
+            filled=value[1]
+            if (VERB==True):
+                print ("Global ID ",id, campaign, "is it filled? " ,filled)
+            if campaign not in optionmap[site]:
+                optionmap[site][campaign]={}
+            optionmap[site][campaign][id]=filled
+    return optionmap
+                
+            
