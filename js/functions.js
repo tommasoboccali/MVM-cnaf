@@ -1,9 +1,14 @@
 function validateForm() {
-  var f1=document.forms["uploadForm"]["file1"].value;
-  if(f1=="") {
-           alert("Need to provide a file1");
-           return false;
+    var f1=document.forms["uploadForm"]["file1"].value;
+    if(f1=="") {
+        alert("Need to provide a file1");
+        return false;
     }
-	return true;
+    return true;
+}
+
+function updateTestID() {
+    var y = document.getElementById("selectCampaign").selectedIndex;
+    document.getElementById("selectTestID").innerHTML = TestIDopts[y];
 }
 

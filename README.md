@@ -1,9 +1,8 @@
 # MVM-cnaf
-we moved to pytho3
+we moved to python3
 you need to do once
 
 pip3 install --upgrade google-api-python-client google-auth-httplib2 google-auth-oauthlib
-     
      
 again only once you have to get credentials.json, by going to 
 
@@ -15,9 +14,9 @@ then the first time you run
 
 python3 extractIDs_lib.py
 
-you will be redirected to a web page where you need to authorize.
+you will be redirected to a web page where you need to authorize to get file token.pickle.
 
-then you will see in your dir the files
+Then you will see in your dir the files
 credentials.json
 token.pickle
 
