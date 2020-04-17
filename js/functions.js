@@ -2,7 +2,7 @@ function validateForm() {
     var f1=document.forms["uploadForm"]["file1"].value;
     var f2=document.forms["uploadForm"]["file2"].value;
     var f3=document.forms["uploadForm"]["file3"].value;
-    var mvmonly=document.forms["uploadForm"]["file3"].checked;
+    var mvmonly=document.forms["uploadForm"]["mvmonly"].checked;
     if((f1=="" || f2=="" || f3=="") && mvmonly==false  ) {
         alert("Need to provide three files");
         return false;
