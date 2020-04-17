@@ -32,7 +32,7 @@ def receiveAndSaveToGoogleSheet(dict_ids, col_simulator_filename, col_mvm_filena
     testID = form.getvalue("TestID")
     site = form.getvalue("Site")
     campaign = form.getvalue("Campaign")
-    simonly = form.getvalue("simonly")
+    mvmonly = form.getvalue("mvmonly")
     file_simulator = form['file1']
     file_simulator_2 = form['file2']
     file_mvm = form['file3']
@@ -58,10 +58,13 @@ def receiveAndSaveToGoogleSheet(dict_ids, col_simulator_filename, col_mvm_filena
     # now I fix them in the gsheet
     #
     print("Filling the gsheet")
+    print ("SITE    = " , site)
+    print ("CAMPAIGN=    = " , campaign)
     print ("Test ID = " ,testID )
     print ("F_SIM = " , file_simulator.filename)
     print ("F_SI2 = " ,file_simulator_2.filename )
     print ("F_MVM = " ,file_mvm.filename )
+    print ("MVMONLY = " , mvmonly )
 
 # simulator 1 and 2 ....
     insert_single_cell(dict_ids[testID], col_simulator_filename,filename_simulator_no_suffix, service, SAMPLE_SPREADSHEET_ID )
@@ -75,11 +78,13 @@ def main():
     Suffix_SAMPLE_RANGE_NAME = '!A:AR'
     service  = initGsheet(SAMPLE_SPREADSHEET_ID)
 
-    (optionmap,opF,opU) = getIDsForm(SAMPLE_SPREADSHEET_ID,Suffix_SAMPLE_RANGE_NAME,service, VERB=False)
+    (dict_ids,col_simulator_filenames,col_mvm_filenames,col_campaigns, all_s) = getIDsFromMultipleSheets(SAMPLE_SPREADSHEET_ID,Suffix_SAMPLE_RANGE_NAME, service,False)
+
+    (optionmap,opF,opU) = getIDsForm(dict_ids, False)
 
 
     if "submit" in form.keys():
-        receiveAndSaveToGoogleSheet(dict_ids, col_simulator_filename, col_mvm_filename, service, SAMPLE_SPREADSHEET_ID)
+        receiveAndSaveToGoogleSheet(dict_ids, col_simulator_filenames, col_mvm_filenames, col_campaigns, service, SAMPLE_SPREADSHEET_ID, False)
     else:
         printForm(opU,opF)
 

@@ -14,9 +14,11 @@ def main():
     SAMPLE_SPREADSHEET_ID = '1AQXgqCKNAuCCDGffi9QU_v_9tOP97qYQNyxx9L6pWRA'
     Suffix_SAMPLE_RANGE_NAME = '!A:AZ'
 
+    
     service  = initGsheet(SAMPLE_SPREADSHEET_ID)
+    (dict_ids,col_simulator_filenames,col_mvm_filenames,col_campaigns, all_s) = getIDsFromMultipleSheets(SAMPLE_SPREADSHEET_ID,Suffix_SAMPLE_RANGE_NAME, service,VERB=False)
 
-    (optionmap, opF, opU) = getIDsForm(SAMPLE_SPREADSHEET_ID,Suffix_SAMPLE_RANGE_NAME,service, VERB=False)
+    (optionmap, opF, opU) = getIDsForm(dict_ids, VERB=False)
 
     print(" GLOBAL", optionmap)
     print(" FILLED", opF)

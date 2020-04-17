@@ -182,9 +182,8 @@ def getIDsFromMultipleSheets(SAMPLE_SPREADSHEET_ID,Suffix_SAMPLE_RANGE_NAME, ser
 
     return (dict_ids,col_simulator_filenames,col_mvm_filenames,col_campaigns, all_s)
 
-def getIDsForm(SAMPLE_SPREADSHEET_ID,Suffix_SAMPLE_RANGE_NAME,service, VERB=True):
+def getIDsForm(dict_ids, VERB=True):
     
-    (dict_ids,col_simulator_filenames,col_mvm_filenames,col_campaigns, all_s) = getIDsFromMultipleSheets(SAMPLE_SPREADSHEET_ID,Suffix_SAMPLE_RANGE_NAME, service,VERB)
     # I need to define options as a map
     optionmap = {}
     for site in dict_ids.keys():
