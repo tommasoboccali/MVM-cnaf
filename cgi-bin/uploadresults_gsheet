@@ -27,7 +27,7 @@ def printForm(opU,opF):
     print(form_template.format(options_map=json.dumps(opU),options_Site=options_Site))
 
 
-def receiveAndSaveToGoogleSheet(dict_ids, col_simulator_filename, col_mvm_filename, service, SAMPLE_SPREADSHEET_ID):
+def receiveAndSaveToGoogleSheet(dict_ids, col_simulator_filenames, col_mvm_filenames, col_campaigns, service, SAMPLE_SPREADSHEET_ID, VERB=False):
     print("Content-Type: text/html\n\n")
     testID = form.getvalue("TestID")
     site = form.getvalue("Site")
