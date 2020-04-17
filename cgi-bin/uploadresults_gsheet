@@ -2,6 +2,7 @@
 import cgi, os
 import cgitb; cgitb.enable()
 import json
+from datetime import datetime
 form = cgi.FieldStorage()
 
 #for gsheet
@@ -97,6 +98,10 @@ def receiveAndSaveToGoogleSheet(dict_ids, col_simulator_filenames, col_mvm_filen
 #path_at_CNAF: path to the dataset at CNAF string
 #conditions: filled automatically with column content from the spreadsheet, corresponding to the selected campaign and test
     dict_json= {}
+    dateTimeObj = datetime.now()
+    timestampStr = dateTimeObj.strftime("%d-%b-%Y (%H:%M:%S.%f)")
+    dict_json['upload_timestamp'] = timestampStr
+
     dict_json['user'] = 'webuser'
     dict_json['site'] = site
     dict_json['campaign'] = campaign
