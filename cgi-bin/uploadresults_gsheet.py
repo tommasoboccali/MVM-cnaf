@@ -36,7 +36,7 @@ def printForm(opU,opF):
 
 def receiveAndSaveToGoogleSheet(dict_ids, col_simulator_filenames, col_mvm_filenames, col_campaigns, col_daqs, col_firmwares, col_comments,service, SAMPLE_SPREADSHEET_ID, all_s,VERB=False):
 
-    CNAF_Prefix ='/storage/mvm/data/'
+    CNAF_Prefix ='/storage/data/'
     print("Content-Type: text/html\n\n")
     testID = form.getvalue("TestID")
     site = form.getvalue("Site")
