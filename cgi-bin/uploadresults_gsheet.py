@@ -65,7 +65,14 @@ def receiveAndSaveToGoogleSheet(dict_ids, col_simulator_filenames, col_mvm_filen
     if mvmonly == False:
         open(path_at_CNAF+file_DTA.filename, 'wb').write(file_DTA.file.read())    
         open(path_at_CNAF+file_RWA.filename, 'wb').write(file_RWA.file.read())
+        if os.path.exists(path_at_CNAF+file_DTA.filename) == False or os.path.exists(path_at_CNAF+file_RWA.filename) == False:
+            print ("====== FAILED FILE UPLOAD!!!!! NOT COINTINUING <br>")
+            sys.exit(4)
+
     open(path_at_CNAF+file_mvm.filename, 'wb').write(file_mvm.file.read())
+    if os.path.exists(path_at_CNAF+file_mvm.filename) == False :
+        print ("====== FAILED FILE UPLOAD!!!!! NOT COINTINUING <br>")
+        sys.exit(4)
 
 #    if file_simulator.filename :
 #        open('/dev/null', 'wb').write(file_simulator.file.read()) #FIXME: do something better than writing to dev null
@@ -139,6 +146,10 @@ def receiveAndSaveToGoogleSheet(dict_ids, col_simulator_filenames, col_mvm_filen
 #    print (dict_json)
     with open(path_at_CNAF+'result.json', 'w') as fp:
         json.dump(dict_json, fp)
+    if os.path.exists(path_at_CNAF+'result.json') == False :
+        print ("====== FAILED JSON UPLOAD!!!!! NOT COINTINUING <br>")
+        sys.exit(5)
+        
     print("JSON Upload was ok<br>")
     #
     # upload also this
