@@ -131,7 +131,7 @@ def receiveAndSaveToGoogleSheet(dict_ids, col_simulator_filenames, col_mvm_filen
         dict_json['simulator_RWA_file_checksum']=md5sum(path_at_CNAF+file_RWA.filename)
         dict_json['simulator_DTA_file_checksum']=md5sum(path_at_CNAF+file_DTA.filename)
     
-    dict_json['conditions'] = {}  # !!!!!!
+    dict_json['conditions'] = all_s[site][rowin_sheet]
     dict_json['path_at_CNAF'] = path_at_CNAF
     dict_json["has_simulator"] =  1 if mvmonly == False else 0
     # dump to json
