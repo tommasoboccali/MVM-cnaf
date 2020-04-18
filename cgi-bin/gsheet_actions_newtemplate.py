@@ -95,7 +95,7 @@ def getIDsFromSheet(SAMPLE_SPREADSHEET_ID,Suffix_SAMPLE_RANGE_NAME, service, she
     if not values:
             if (VERB==True):
                 print('No data found in Sheet, skipping ....',s)
-                return (False, False, False, False, False, False, False, False)
+                return (None, None, None, None, None, None, None, None)
 
     num=0
     headers = []
@@ -138,7 +138,7 @@ def getIDsFromSheet(SAMPLE_SPREADSHEET_ID,Suffix_SAMPLE_RANGE_NAME, service, she
             if col_simulator_filename ==-1 or col_mvm_filename==-1 or col_campaign==-1   or col_comment ==-1 or col_firmware ==-1  or col_daq ==-1 :
                 if (VERB==True):
                     print ("Skipping sheet",s, ", does not contain filename or campaign columns")
-                return (False, False, False, False, False, False, False, False)
+                return (None, None, None, None, None, None, None, None)
 #
 # check if all the colums have at least the length       
 #
@@ -185,6 +185,10 @@ def getIDsFromMultipleSheets(SAMPLE_SPREADSHEET_ID,Suffix_SAMPLE_RANGE_NAME, ser
         if (VERB==True):
             print ("----------Studyng SHEET", s)
         (dict_id,col_simulator_filename,col_mvm_filename,col_campaign, col_daq, col_firmware, col_comment, all) = getIDsFromSheet(SAMPLE_SPREADSHEET_ID,Suffix_SAMPLE_RANGE_NAME, service, s, VERB)
+        if dict_id is None:
+            if (VERB==True):
+                print ("Skipping SHEET", s, "since it is malformed")
+            continue
         dict_ids[s] = dict_id
         col_simulator_filenames[s]=col_simulator_filename
         col_mvm_filenames[s]=col_mvm_filename
