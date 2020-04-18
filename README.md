@@ -24,12 +24,9 @@ do NOT commit them! You are ok now!
 
 the Gsheet used for test is
 
-https://docs.google.com/spreadsheets/d/1MlOhG-UhXlK3htq4FqL0nN0yrl0ubAj0jRHXY4Ki6ro/edit
+https://docs.google.com/spreadsheets/d/1AQXgqCKNAuCCDGffi9QU_v_9tOP97qYQNyxx9L6pWRA/edit#gid=1782614119
 
-in paticular tab 
-
-20200412 ISO
-
+(which has a TRIUMF and a MILANO folder)
 
 in cgi-bin you can test by
 
