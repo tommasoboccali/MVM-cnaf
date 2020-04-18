@@ -3,7 +3,8 @@ import cgi, os
 import cgitb; cgitb.enable()
 import json
 import pathlib
-
+import hashlib
+ 
 from datetime import datetime
 form = cgi.FieldStorage()
 
@@ -17,7 +18,9 @@ import sys
 import os
 import json
 from gsheet_actions_newtemplate import *
-
+ 
+def md5sum(filename):
+  return hashlib.md5(open(filename, 'rb').read()).hexdigest()
 
 def printForm(opU,opF):
     form_template_file=open ("../templates/form.html", "r")
@@ -121,8 +124,13 @@ def receiveAndSaveToGoogleSheet(dict_ids, col_simulator_filenames, col_mvm_filen
     dict_json['comment']= all_s[site][rowin_sheet][col_comments[site]]
     #
     dict_json['MVM_file']=file_mvm.filename
-    dict_json['simulator_RWA_file']=file_RWA.filename
-    dict_json['simulator_DTA_file']=file_DTA.filename
+    dict_json['MVM_file_checksum']=md5sum(path_at_CNAF+file_mvm.filename)
+    if (mvmonly == False):
+        dict_json['simulator_RWA_file']=file_RWA.filename
+        dict_json['simulator_DTA_file']=file_DTA.filename
+        dict_json['simulator_RWA_file_checksum']=md5sum(path_at_CNAF+file_RWA.filename)
+        dict_json['simulator_DTA_file_checksum']=md5sum(path_at_CNAF+file_DTA.filename)
+    
     dict_json['conditions'] = {}  # !!!!!!
     dict_json['path_at_CNAF'] = path_at_CNAF
     dict_json["has_simulator"] =  1 if mvmonly == False else 0
