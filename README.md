@@ -12,7 +12,7 @@ and clicking on Enable the Google Sheets API (follow the instructions and then c
      
 then the first time you run 
 
-python3 extractIDs_lib.py
+python3 extractIDs_multisheet_lib.py
 
 you will be redirected to a web page where you need to authorize to get file token.pickle.
 
@@ -32,6 +32,12 @@ in paticular tab
 
 
 in cgi-bin you can test by
+
+(note: apparently path directives are different in the light http and apache. if you use the folloging line, you need to link
+
+ln -s <here>/MVM-cnaf/templates <here>
+
+)
 
 python3 -m http.server --cgi
 
