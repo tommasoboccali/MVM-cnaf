@@ -12,7 +12,7 @@ and clicking on Enable the Google Sheets API (follow the instructions and then c
      
 then the first time you run 
 
-python3 extractIDs_lib.py
+python3 extractIDs_multisheet_lib.py
 
 you will be redirected to a web page where you need to authorize to get file token.pickle.
 
@@ -24,14 +24,17 @@ do NOT commit them! You are ok now!
 
 the Gsheet used for test is
 
-https://docs.google.com/spreadsheets/d/1MlOhG-UhXlK3htq4FqL0nN0yrl0ubAj0jRHXY4Ki6ro/edit
+https://docs.google.com/spreadsheets/d/1AQXgqCKNAuCCDGffi9QU_v_9tOP97qYQNyxx9L6pWRA/edit#gid=1782614119
 
-in paticular tab 
-
-20200412 ISO
-
+(which has a TRIUMF and a MILANO folder)
 
 in cgi-bin you can test by
+
+(note: apparently path directives are different in the light http and apache. if you use the folloging line, you need to link
+
+ln -s <here>/MVM-cnaf/templates <here>
+
+)
 
 python3 -m http.server --cgi
 
