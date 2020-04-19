@@ -18,9 +18,35 @@ import sys
 import os
 import json
 from gsheet_actions_newtemplate import *
- 
+
+from email.message import EmailMessage
+from email.headerregistry import Address
+from email.utils import make_msgid
+import smtplib
+
+
 def md5sum(filename):
   return hashlib.md5(open(filename, 'rb').read()).hexdigest()
+
+def sendMail( site,id, campaign, path, filename_simulator_rwa, filename_simulator_dta,filename_mvm, mvmonly):
+    msg = EmailMessage()
+#    server = smtplib.SMTP("131.154.3.46",25)
+    f="mvmwebservices@gmail.com"
+    to="tommaso.boccali@gmail.com"
+    subject = 'new Upload!'
+    b = "Site = "+site + "\nCampaign ="+ campaign +"\nTestID"+str(id)+"\nFILENAME_SIM_RWA  ="+filename_simulator_rwa+"\nFILENAME_SIM_DTA  ="+filename_simulator_dta+"\nFILENAME_MVM  ="+filename_mvm+"\nPATH    ="+path
+    body = '''
+Dear all, a new upload has happened.
+It is 
+''' + b
+    msg['Subject'] = "subject"
+    msg['From'] = f
+    msg['To']  = to
+    msg.set_content(body)
+
+    print (msg)
+    
+#    server.send_message(msg)
 
 def printForm(opU,opF):
     form_template_file=open ("../templates/form.html", "r")
@@ -198,6 +224,9 @@ def receiveAndSaveToGoogleSheet(dict_ids, col_simulator_filenames, col_mvm_filen
     else:
         print ("===== Error updating XLS!<br>")
         sys.exit(6)
+#    print ("MAIL SENDING")
+#    sendMail( site,testID, campaign, path_at_CNAF, file_RWA.filename, file_DTA.filename,file_mvm.filename, mvmonly)
+#    print ("MAIL SENT")
 
 def main():
     # The ID and range of a sample spreadsheet.
