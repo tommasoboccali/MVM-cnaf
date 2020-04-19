@@ -11,7 +11,14 @@ function validateForm() {
         alert("Need to provide the MVM file");
         return false;
     }
+    if(mvmonly ==false && (f1==f2 || f2==f3 || f3==f1)   ) {
+        alert("All the filenames must be different!");
+        return false;
+    }
     return true;
+
+    return true;
+
 }
 function updateCampaign() {
 	var sIdx = document.getElementById("selectSite").selectedIndex;
@@ -21,7 +28,7 @@ function updateCampaign() {
 	for (s in camp.options) { camp.options.remove(0); }
 	for(var k in optionsMap[sStr])
 	{
-		var opt = document.createElement("option"); 
+		var opt = document.createElement("option");
 		opt.text = k
 		camp.add(opt)
 		console.log(k);
@@ -41,11 +48,23 @@ function updateTestID() {
 	for (s in site.options) { site.options.remove(0); }
 	for(var k in optionsMap[sStr][cStr])
 	{
-		var opt = document.createElement("option"); 
+		var opt = document.createElement("option");
 		opt.text = optionsMap[sStr][cStr][k]
 		site.add(opt)
 		console.log(k);
 	}
 }
 
-
+function MVMonly() {
+    var checked = document.getElementById('mvmonly').checked;
+    if (checked == true) {
+        document.getElementById('file1').value = "";
+        document.getElementById('file2').value = "";
+        document.getElementById('file1').disabled = true;
+        document.getElementById('file2').disabled = true;
+    }
+    if (checked == false) {
+        document.getElementById('file1').disabled = false;
+        document.getElementById('file2').disabled = false;
+    }
+}

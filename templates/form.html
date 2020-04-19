@@ -11,11 +11,11 @@
             .button1:hover {{
                 box-shadow: 0 6px 12px 0 rgba(0,0,0,0.24),0 17px 50px 0 rgba(0,0,0,0.19);
                                }}
-          </style> 
+          </style>
 	</head>
 
         <img src="https://pbs.twimg.com/profile_images/1249225137590865921/hnxjw1Ma_400x400.jpg" alt="MVM" width="300" height="300">
-	
+
 	<body onload=updateCampaign()>
           <script>var optionsMap = {options_map}</script>
 	   <form class = "thick" name="uploadForm" method="post" enctype="multipart/form-data" onsubmit="return validateForm()">
@@ -40,14 +40,14 @@
              </table>
              <br>
              <table cellspacing="10">
-               <tr><th> Upload MVM only </th><th> <input type="checkbox" name="mvmonly"> </th></tr>
+               <tr><th> Upload MVM only </th><th> <input type="checkbox" name="mvmonly" id="mvmonly" onchange='MVMonly()'> </th></tr>
 	       <tr><th> File Simulator DTA </th><th> <input type="file" name="file1" id="file1" class="medium"></th></tr>
 	       <tr><th> File Simulator RWA </th><th> <input type="file" name="file2" id="file2" class="medium"></th></tr>
 	       <tr><th> File MVM           </th><th> <input type="file" name="file3" id="file3" class="medium"></th></tr>
-               
+
              </table>
 
-	    <input class="button button1" type="submit" value="Upload >>" name="submit" >
+	     <input class="button button1" type="submit" value="Upload >>" name="submit" >
 	   </form>
 <p>
 In case of technical problems, please contact:
@@ -56,3 +56,4 @@ In case of technical problems, please contact:
 
 	<body>
 </html>
+

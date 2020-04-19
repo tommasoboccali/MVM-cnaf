@@ -68,7 +68,7 @@ def receiveAndSaveToGoogleSheet(dict_ids, col_simulator_filenames, col_mvm_filen
 
 
     print ("STARTING UPLOAD.....<br>")
-
+    print (form)
     testID = form.getvalue("TestID")
     site = form.getvalue("Site")
     campaign = form.getvalue("Campaign")
@@ -78,19 +78,23 @@ def receiveAndSaveToGoogleSheet(dict_ids, col_simulator_filenames, col_mvm_filen
         mvmonly = True
     else:
         mvmonly = False
-    file_DTA = form['file1']
-    file_RWA = form['file2']
+    file_DTA = ""
+    file_RWA =  ""
+    if mvmonly == False:
+     file_DTA = form['file1']
+     file_RWA = form['file2']
     file_mvm = form['file3']
     #
     # i issue an error if the first two are different suffix apart
     #
-    if mvmonly == False and file_DTA.filename==file_RWA.filename:
-                print (" ===== ERROR! The two simulator files cannot have the same file name. Aborting<br>")
+    if mvmonly == False and (file_DTA.filename==file_RWA.filename or file_mvm.filename==file_RWA.filename or file_DTA.filename==file_mvm.filename):
+                print (" ===== ERROR! No two files  have the same file name. Aborting<br>")
                 sys.exit(9)
     if (mvmonly == False and (os.path.splitext(file_DTA.filename)[0] != os.path.splitext(file_RWA.filename)[0])):
         print ("ERROR! The two simulator files should have the same name apart from the suffix. I got ",file_DTA.filename, file_RWA.filename," <br>")
         sys.exit(3)
-    filename_simulator_no_suffix = os.path.splitext(file_DTA.filename)[0]
+    if mvmonly == False:
+      filename_simulator_no_suffix = os.path.splitext(file_DTA.filename)[0]
 
     path_at_CNAF = CNAF_Prefix + '/' + site+ '/'+campaign+ '/'+testID+'/'
 #mkdir this path
@@ -141,9 +145,10 @@ def receiveAndSaveToGoogleSheet(dict_ids, col_simulator_filenames, col_mvm_filen
     print ("SITE    = " , site, '<br>')
     print ("CAMPAIGN= " , campaign, '<br>')
     print ("Test ID = " ,testID , '<br>')
-    print ("F_DTA   = " , file_DTA.filename, '<br>')
-    print ("F_RWA   = " ,file_RWA.filename , '<br>')
-    print ("F_MVM   = " ,file_mvm.filename , '<br>')
+    print ("F_MVM   = " , file_mvm.filename, '<br>')
+    if mvmonly == False:
+      print ("F_DTA   = " , file_DTA.filename, '<br>')
+      print ("F_RWA   = " ,file_RWA.filename , '<br>')
     print ("MVMONLY = " , mvmonly , '<br>')
 
 #
@@ -257,7 +262,7 @@ def main():
     (dict_ids,col_simulator_filenames,col_mvm_filenames,col_campaigns, col_daqs, col_firmwares, col_comments, all_s) = getIDsFromMultipleSheets(SAMPLE_SPREADSHEET_ID,Suffix_SAMPLE_RANGE_NAME, service,False)
 
     (optionmap,opF,opU) = getIDsForm(dict_ids, False)
-
+#    print (opU)
 
     if "submit" in form.keys():
         receiveAndSaveToGoogleSheet(dict_ids, col_simulator_filenames, col_mvm_filenames, col_campaigns, col_daqs, col_firmwares, col_comments,service, SAMPLE_SPREADSHEET_ID, all_s,False)
