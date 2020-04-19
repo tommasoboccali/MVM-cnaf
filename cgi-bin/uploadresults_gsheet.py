@@ -65,6 +65,10 @@ def receiveAndSaveToGoogleSheet(dict_ids, col_simulator_filenames, col_mvm_filen
     CNAF_Prefix ='/storage/data/'
 #    CNAF_Prefix='/Users/tom/DBClone/work/MVM/data'
     print("Content-Type: text/html\n\n")
+
+
+    print ("STARTING UPLOAD.....<br>")
+
     testID = form.getvalue("TestID")
     site = form.getvalue("Site")
     campaign = form.getvalue("Campaign")
@@ -83,9 +87,8 @@ def receiveAndSaveToGoogleSheet(dict_ids, col_simulator_filenames, col_mvm_filen
     if mvmonly == False and file_DTA.filename==file_RWA.filename:
                 print (" ===== ERROR! The two simulator files cannot have the same file name. Aborting<br>")
                 sys.exit(9)
-
-    if (os.path.splitext(file_DTA.filename)[0] != os.path.splitext(file_RWA.filename)[0]):
-        print ("ERROR! The two simulator files should have the same name apart from the suffix. I got ",file_simulator.filename, file_simulator_2.filename)
+    if (mvmonly == False and (os.path.splitext(file_DTA.filename)[0] != os.path.splitext(file_RWA.filename)[0])):
+        print ("ERROR! The two simulator files should have the same name apart from the suffix. I got ",file_DTA.filename, file_RWA.filename," <br>")
         sys.exit(3)
     filename_simulator_no_suffix = os.path.splitext(file_DTA.filename)[0]
 
