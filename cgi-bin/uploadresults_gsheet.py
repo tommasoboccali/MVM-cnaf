@@ -80,6 +80,10 @@ def receiveAndSaveToGoogleSheet(dict_ids, col_simulator_filenames, col_mvm_filen
     #
     # i issue an error if the first two are different suffix apart
     #
+    if mvmonly == False and file_DTA.filename==file_RWA.filename:
+                print (" ===== ERROR! The two simulator files cannot have the same file name. Aborting<br>")
+                sys.exit(9)
+
     if (os.path.splitext(file_DTA.filename)[0] != os.path.splitext(file_RWA.filename)[0]):
         print ("ERROR! The two simulator files should have the same name apart from the suffix. I got ",file_simulator.filename, file_simulator_2.filename)
         sys.exit(3)
@@ -183,9 +187,22 @@ def receiveAndSaveToGoogleSheet(dict_ids, col_simulator_filenames, col_mvm_filen
         dict_json['simulator_RWA_file_checksum']=md5sum(path_at_CNAF+file_RWA.filename)
         dict_json['simulator_DTA_file_checksum']=md5sum(path_at_CNAF+file_DTA.filename)
     
-    dict_json['conditions'] = all_s[site][rowin_sheet]
     dict_json['path_at_CNAF'] = path_at_CNAF
     dict_json["has_simulator"] =  1 if mvmonly == False else 0
+
+#    dict_json['conditions'] = all_s[site][rowin_sheet]
+#
+# put a dict 
+#
+    conditions_dict = {}
+    for i in range(0,len(all_s[site][2])): #these are the headers
+       conditions_dict[all_s[site][2][i]] =  all_s[site][rowin_sheet][i]
+    dict_json['conditions']= conditions_dict
+
+       #
+#
+#
+
     # dump to json
 
 #    print (dict_json)
