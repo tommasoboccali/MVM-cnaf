@@ -37,6 +37,7 @@ def printForm(opU,opF):
 def receiveAndSaveToGoogleSheet(dict_ids, col_simulator_filenames, col_mvm_filenames, col_campaigns, col_daqs, col_firmwares, col_comments,service, SAMPLE_SPREADSHEET_ID, all_s,VERB=False):
 
     CNAF_Prefix ='/storage/data/'
+#    CNAF_Prefix='/Users/tom/DBClone/work/MVM/data'
     print("Content-Type: text/html\n\n")
     testID = form.getvalue("TestID")
     site = form.getvalue("Site")
@@ -60,16 +61,34 @@ def receiveAndSaveToGoogleSheet(dict_ids, col_simulator_filenames, col_mvm_filen
 
     path_at_CNAF = CNAF_Prefix + '/' + site+ '/'+campaign+ '/'+testID+'/'
 #mkdir this path
-    pathlib.Path(path_at_CNAF).mkdir(parents=True, exist_ok=True)
+    try:
+      pathlib.Path(path_at_CNAF).mkdir(parents=True, exist_ok=True)
+    except:
+        print ("===== Creating Directory file ", path_at_CNAF, " failed! Aborting<br>")
+        sys.exit(6)
 
     if mvmonly == False:
-        open(path_at_CNAF+file_DTA.filename, 'wb').write(file_DTA.file.read())    
-        open(path_at_CNAF+file_RWA.filename, 'wb').write(file_RWA.file.read())
+        try:
+            open(path_at_CNAF+file_DTA.filename, 'wb').write(file_DTA.file.read())
+        except:
+            print ("===== Saving file ",file_DTA.filename, " to ", path_at_CNAF, " failed! Aborting<br>")
+            sys.exit(5)
+        try:
+            open(path_at_CNAF+file_RWA.filename, 'wb').write(file_RWA.file.read())
+        except:
+            print ("===== Saving file ",file_RWA.filename, " to ", path_at_CNAF, " failed! Aborting<br>")
+            sys.exit(5)
+
         if os.path.exists(path_at_CNAF+file_DTA.filename) == False or os.path.exists(path_at_CNAF+file_RWA.filename) == False:
             print ("====== FAILED FILE UPLOAD!!!!! NOT COINTINUING <br>")
             sys.exit(4)
 
-    open(path_at_CNAF+file_mvm.filename, 'wb').write(file_mvm.file.read())
+    try:
+        open(path_at_CNAF+file_mvm.filename, 'wb').write(file_mvm.file.read())
+    except:
+        print ("===== Saving file ",file_mvm.filename, " to ", path_at_CNAF, " failed! Aborting<br>")
+        sys.exit(5)
+
     if os.path.exists(path_at_CNAF+file_mvm.filename) == False :
         print ("====== FAILED FILE UPLOAD!!!!! NOT COINTINUING <br>")
         sys.exit(4)
@@ -144,8 +163,13 @@ def receiveAndSaveToGoogleSheet(dict_ids, col_simulator_filenames, col_mvm_filen
     # dump to json
 
 #    print (dict_json)
-    with open(path_at_CNAF+'result.json', 'w') as fp:
-        json.dump(dict_json, fp)
+    try:
+        with open(path_at_CNAF+'result.json', 'w') as fp:
+            json.dump(dict_json, fp)
+    except:
+        print ("===== Saving file ",'result.json', " to ", path_at_CNAF, " failed! Aborting<br>")
+        sys.exit(5)
+
     if os.path.exists(path_at_CNAF+'result.json') == False :
         print ("====== FAILED JSON UPLOAD!!!!! NOT COINTINUING <br>")
         sys.exit(5)
@@ -160,13 +184,20 @@ def receiveAndSaveToGoogleSheet(dict_ids, col_simulator_filenames, col_mvm_filen
 #    print ('===================', dict_ids[site][(testID,campaign)][0])   
         
     if (mvmonly==False):
-            insert_single_cell(dict_ids[site][(testID,campaign)][0], col_simulator_filenames[site],filename_simulator_no_suffix, service,site, SAMPLE_SPREADSHEET_ID, VERB=VERB )
-            print ("XLS Edited with Simulator Filenames!<br>")
+            res = insert_single_cell(dict_ids[site][(testID,campaign)][0], col_simulator_filenames[site],filename_simulator_no_suffix, service,site, SAMPLE_SPREADSHEET_ID, VERB=VERB )
+            if res == True:
+                print ("XLS Edited with Simulator Filenames!<br>")
+            else:
+                print ("===== Error updating XLS!<br>")
+                sys.exit(6)
 
 # mvm
-    insert_single_cell(dict_ids[site][(testID,campaign)][0], col_mvm_filenames[site],file_mvm.filename, service, site,  SAMPLE_SPREADSHEET_ID ,VERB=VERB)
-    print ("XLS Edited with MVM Filename!<br>")
-
+    res= insert_single_cell(dict_ids[site][(testID,campaign)][0], col_mvm_filenames[site],file_mvm.filename, service, site,  SAMPLE_SPREADSHEET_ID ,VERB=VERB)
+    if res == True:
+        print ("XLS Edited with MVM Filename!<br>")
+    else:
+        print ("===== Error updating XLS!<br>")
+        sys.exit(6)
 
 def main():
     # The ID and range of a sample spreadsheet.

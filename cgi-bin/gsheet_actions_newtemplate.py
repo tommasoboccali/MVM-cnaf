@@ -32,6 +32,7 @@ def insert_single_cell(row, column, text, service, sheet, SAMPLE_SPREADSHEET_ID,
         range=range_insert,
         valueInputOption="RAW",
         body=body).execute()
+    return (result['updatedCells'] == 1)
 
 def initGsheet(SAMPLE_SPREADSHEET_ID):
     SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
