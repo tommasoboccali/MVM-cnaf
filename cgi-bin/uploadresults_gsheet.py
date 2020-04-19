@@ -168,7 +168,7 @@ def receiveAndSaveToGoogleSheet(dict_ids, col_simulator_filenames, col_mvm_filen
     timestampStr = dateTimeObj.strftime("%d-%b-%Y (%H:%M:%S.%f)")
     dict_json['upload_timestamp'] = timestampStr
 
-    dict_json['user'] = 'webuser'
+    dict_json['user'] =os.getenv('OIDC_CLAIM_name') 
     dict_json['site'] = site
     dict_json['campaign'] = campaign
     dict_json['testID'] = testID
