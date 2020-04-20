@@ -67,8 +67,8 @@ def receiveAndSaveToGoogleSheet(dict_ids, col_simulator_filenames, col_mvm_filen
     print("Content-Type: text/html\n\n")
 
 
-    print ("STARTING UPLOAD.....<br>")
-    print (form)
+    print ('<p><font size="7" color="#0000ff">Starting Upload to GSheet</font></p>')
+#    print (form)
     testID = form.getvalue("TestID")
     site = form.getvalue("Site")
     campaign = form.getvalue("Campaign")
@@ -88,10 +88,10 @@ def receiveAndSaveToGoogleSheet(dict_ids, col_simulator_filenames, col_mvm_filen
     # i issue an error if the first two are different suffix apart
     #
     if mvmonly == False and (file_DTA.filename==file_RWA.filename or file_mvm.filename==file_RWA.filename or file_DTA.filename==file_mvm.filename):
-                print (" ===== ERROR! No two files  have the same file name. Aborting<br>")
+                print ('<p><font size="7" color="#ff0000"> ERROR! No two files  have the same file name. Aborting</font></p>')
                 sys.exit(9)
     if (mvmonly == False and (os.path.splitext(file_DTA.filename)[0] != os.path.splitext(file_RWA.filename)[0])):
-        print ("ERROR! The two simulator files should have the same name apart from the suffix. I got ",file_DTA.filename, file_RWA.filename," <br>")
+        print ('<p><font size="7" color="#ff0000">ERROR! The two simulator files should have the same name apart from the suffix. I got ',file_DTA.filename, file_RWA.filename,'</font></p>')
         sys.exit(3)
     if mvmonly == False:
       filename_simulator_no_suffix = os.path.splitext(file_DTA.filename)[0]
@@ -101,33 +101,33 @@ def receiveAndSaveToGoogleSheet(dict_ids, col_simulator_filenames, col_mvm_filen
     try:
       pathlib.Path(path_at_CNAF).mkdir(parents=True, exist_ok=True)
     except:
-        print ("===== Creating Directory file ", path_at_CNAF, " failed! Aborting<br>")
+        print ('<p><font size="7" color="#ff0000">Creating Directory file ', path_at_CNAF, ' FAILED</font></p>')
         sys.exit(6)
 
     if mvmonly == False:
         try:
             open(path_at_CNAF+file_DTA.filename, 'wb').write(file_DTA.file.read())
         except:
-            print ("===== Saving file ",file_DTA.filename, " to ", path_at_CNAF, " failed! Aborting<br>")
+            print ('<p><font size="7" color="#ff0000">Saving file ',file_DTA.filename, ' to ', path_at_CNAF, ' FAILED</font></p>')
             sys.exit(5)
         try:
             open(path_at_CNAF+file_RWA.filename, 'wb').write(file_RWA.file.read())
         except:
-            print ("===== Saving file ",file_RWA.filename, " to ", path_at_CNAF, " failed! Aborting<br>")
+            print ('<p><font size="7" color="#ff0000">Saving file ',file_RWA.filename, ' to ', path_at_CNAF, ' FAILED</font></p>')
             sys.exit(5)
 
         if os.path.exists(path_at_CNAF+file_DTA.filename) == False or os.path.exists(path_at_CNAF+file_RWA.filename) == False:
-            print ("====== FAILED FILE UPLOAD!!!!! NOT COINTINUING <br>")
+            print ('<p><font size="7" color="#ff0000">FAILED FILE UPLOAD!!!!! NOT CONTINUING </font></p>')
             sys.exit(4)
 
     try:
         open(path_at_CNAF+file_mvm.filename, 'wb').write(file_mvm.file.read())
     except:
-        print ("===== Saving file ",file_mvm.filename, " to ", path_at_CNAF, " failed! Aborting<br>")
+        print ('<p><font size="7" color="#ff0000">Saving file ',file_mvm.filename, ' to ', path_at_CNAF, '</font></p>')
         sys.exit(5)
 
     if os.path.exists(path_at_CNAF+file_mvm.filename) == False :
-        print ("====== FAILED FILE UPLOAD!!!!! NOT COINTINUING <br>")
+        print ('<p><font size="7" color="#ff0000">FAILED FILE UPLOAD!!!!! NOT CONTINUING </font></p>')
         sys.exit(4)
 
 #    if file_simulator.filename :
@@ -137,10 +137,11 @@ def receiveAndSaveToGoogleSheet(dict_ids, col_simulator_filenames, col_mvm_filen
 #    if file_simulator_2xs.filename :
 #        open('/dev/null', 'wb').write(file_simulator_2.file.read()) #FIXME: do something better than writing to dev null
     
-    print("File Upload was ok<br>")
+    print('<p><font size="7" color="#00aa00">File Upload was ok</font></p>')
     #
     # now I fix them in the gsheet
     #
+    print ('<p><font size="4" color="#00aa00">')
     print("Filling the gsheet", '<br>')
     print ("SITE    = " , site, '<br>')
     print ("CAMPAIGN= " , campaign, '<br>')
@@ -150,6 +151,7 @@ def receiveAndSaveToGoogleSheet(dict_ids, col_simulator_filenames, col_mvm_filen
       print ("F_DTA   = " , file_DTA.filename, '<br>')
       print ("F_RWA   = " ,file_RWA.filename , '<br>')
     print ("MVMONLY = " , mvmonly , '<br>')
+    print('</font></p>')
 
 #
 # now prepare the JSON, starting from all
@@ -176,7 +178,7 @@ def receiveAndSaveToGoogleSheet(dict_ids, col_simulator_filenames, col_mvm_filen
     timestampStr = dateTimeObj.strftime("%d-%b-%Y (%H:%M:%S.%f)")
     dict_json['upload_timestamp'] = timestampStr
 
-    dict_json['user'] =os.getenv('OIDC_CLAIM_name') 
+    dict_json['user'] =os.getenv('OIDC_preferred_username') 
     dict_json['site'] = site
     dict_json['campaign'] = campaign
     dict_json['testID'] = testID
@@ -218,14 +220,16 @@ def receiveAndSaveToGoogleSheet(dict_ids, col_simulator_filenames, col_mvm_filen
         with open(path_at_CNAF+'result.json', 'w') as fp:
             json.dump(dict_json, fp)
     except:
-        print ("===== Saving file ",'result.json', " to ", path_at_CNAF, " failed! Aborting<br>")
+        print ('<p><font size="7" color="#ff0000">FAILED FILE UPLOAD!!!!! NOT CONTINUING </font></p>')
+
+        print ('<p><font size="7" color="#ff0000">Saving file ','result.json', ' to ', path_at_CNAF, ' failed! </font></p>')
         sys.exit(5)
 
     if os.path.exists(path_at_CNAF+'result.json') == False :
-        print ("====== FAILED JSON UPLOAD!!!!! NOT COINTINUING <br>")
+        print ('<p><font size="7" color="#ff0000">Saving JSON File Failed </font></p>')
         sys.exit(5)
         
-    print("JSON Upload was ok<br>")
+    print('<p><font size="7" color="#00aa00">JSON Upload was ok</font></p>')
     #
     # upload also this
     #
@@ -237,21 +241,24 @@ def receiveAndSaveToGoogleSheet(dict_ids, col_simulator_filenames, col_mvm_filen
     if (mvmonly==False):
             res = insert_single_cell(dict_ids[site][(testID,campaign)][0], col_simulator_filenames[site],filename_simulator_no_suffix, service,site, SAMPLE_SPREADSHEET_ID, VERB=VERB )
             if res == True:
-                print ("XLS Edited with Simulator Filenames!<br>")
+                print ('<p><font size="7" color="#00aa00"> XLS Edited with Simulator Filenames</font></p>')
+
             else:
-                print ("===== Error updating XLS!<br>")
+                print ('<p><font size="7" color="#ff0000">Error updating XLS! </font></p>')
                 sys.exit(6)
 
 # mvm
     res= insert_single_cell(dict_ids[site][(testID,campaign)][0], col_mvm_filenames[site],file_mvm.filename, service, site,  SAMPLE_SPREADSHEET_ID ,VERB=VERB)
     if res == True:
-        print ("XLS Edited with MVM Filename!<br>")
+                print ('<p><font size="7" color="#00aa00"XLS Edited with MVM Filenames</font></p>')
     else:
-        print ("===== Error updating XLS!<br>")
+        print ('<p><font size="7" color="#ff0000">Error updating XLS! </font></p>')
         sys.exit(6)
 #    print ("MAIL SENDING")
 #    sendMail( site,testID, campaign, path_at_CNAF, file_RWA.filename, file_DTA.filename,file_mvm.filename, mvmonly)
 #    print ("MAIL SENT")
+    print ('<p><font size="9" color="#006400">PROCEDURE OK </font></p>')
+
 
 def main():
     # The ID and range of a sample spreadsheet.
