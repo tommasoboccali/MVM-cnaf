@@ -141,7 +141,7 @@ def receiveAndSaveToGoogleSheet(dict_ids, col_simulator_filenames, col_mvm_filen
     #
     # now I fix them in the gsheet
     #
-    print ('<p><font size="4" color="#9400D3">')
+    print ('<p><font size="4" color="#00aa00">')
     print("Filling the gsheet", '<br>')
     print ("SITE    = " , site, '<br>')
     print ("CAMPAIGN= " , campaign, '<br>')
@@ -178,7 +178,7 @@ def receiveAndSaveToGoogleSheet(dict_ids, col_simulator_filenames, col_mvm_filen
     timestampStr = dateTimeObj.strftime("%d-%b-%Y (%H:%M:%S.%f)")
     dict_json['upload_timestamp'] = timestampStr
 
-    dict_json['user'] =os.getenv('OIDC_preferred_username') 
+    dict_json['user'] =os.getenv('OIDC_CLAIM_preferred_username') 
     dict_json['site'] = site
     dict_json['campaign'] = campaign
     dict_json['testID'] = testID
