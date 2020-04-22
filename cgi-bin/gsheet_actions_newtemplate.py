@@ -251,3 +251,18 @@ def getIDsForm(dict_ids, VERB=True):
 
 
             
+def dictForVisualize(dict_s, col_simulator_filenames,col_mvm_filenames,col_campaigns, col_daqs, col_firmwares, col_comments, all_s):
+    conditions = {}
+
+    for site in dict_s.keys():
+        conditions[site]={}
+        for (id,campaign) in (dict_s[site]).keys():
+            if campaign not in conditions[site]:
+                conditions[site][campaign] = {}
+            if id not in conditions[site][campaign] and  dict_s[site][(id,campaign)][1] ==False:
+                    conditions[site][campaign][id] = {}
+                    rowin_sheet=dict_s[site][(id,campaign)][0]
+                    for i in range(0,len(all_s[site][2])): #these are the headers
+                            conditions[site][campaign][id][all_s[site][2][i]] =  all_s[site][rowin_sheet][i]
+    return conditions
+    

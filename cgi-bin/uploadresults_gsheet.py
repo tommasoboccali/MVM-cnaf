@@ -287,7 +287,6 @@ def receiveAndSaveToGoogleSheet(dict_ids, col_simulator_filenames, col_mvm_filen
 #    print ("MAIL SENT")
     print ('<p><font size="9" color="#006400">PROCEDURE OK </font></p>')
 
-
 def main():
     # The ID and range of a sample spreadsheet.
     SAMPLE_SPREADSHEET_ID = '1AQXgqCKNAuCCDGffi9QU_v_9tOP97qYQNyxx9L6pWRA'
@@ -296,13 +295,19 @@ def main():
 
     (dict_ids,col_simulator_filenames,col_mvm_filenames,col_campaigns, col_daqs, col_firmwares, col_comments, all_s) = getIDsFromMultipleSheets(SAMPLE_SPREADSHEET_ID,Suffix_SAMPLE_RANGE_NAME, service,False)
 
+#
+# create megadict
+#   
     (optionmap,opF,opU) = getIDsForm(dict_ids, False)
+
+    condition_table = dictForVisualize(dict_s, ,col_simulator_filenames,col_mvm_filenames,col_campaigns, col_daqs, col_firmwares, col_comments, all_s)
+    
 #    print (opU)
 
     if "submit" in form.keys():
         receiveAndSaveToGoogleSheet(dict_ids, col_simulator_filenames, col_mvm_filenames, col_campaigns, col_daqs, col_firmwares, col_comments,service, SAMPLE_SPREADSHEET_ID, all_s,False)
     else:
-        printForm(opU,opF)
+        printForm(opU,opF, conditions_table)
 
 if __name__ == '__main__':
     main()
