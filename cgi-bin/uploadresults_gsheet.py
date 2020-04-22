@@ -300,7 +300,7 @@ def main():
 #   
     (optionmap,opF,opU) = getIDsForm(dict_ids, False)
 
-    condition_table = dictForVisualize(dict_s, ,col_simulator_filenames,col_mvm_filenames,col_campaigns, col_daqs, col_firmwares, col_comments, all_s)
+    condition_table = dictForVisualize(dict_s ,col_simulator_filenames,col_mvm_filenames,col_campaigns, col_daqs, col_firmwares, col_comments, all_s)
     
 #    print (opU)
 
