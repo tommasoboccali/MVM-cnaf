@@ -285,7 +285,7 @@ def receiveAndSaveToGoogleSheet(dict_ids, col_simulator_filenames, col_mvm_filen
 #    print ("MAIL SENDING")
 #    sendMail( site,testID, campaign, path_at_CNAF, file_RWA.filename, file_DTA.filename,file_mvm.filename, mvmonly)
 #    print ("MAIL SENT")
-    print ('<p><font size="9" color="#006400">PROCEDURE OK </font></p>')
+    print ('<p><font size="9" color="#006400">PROCEDURE OK  - PLEASE DO NOT RELOAD!</font></p>')
 
 def main():
     # The ID and range of a sample spreadsheet.
