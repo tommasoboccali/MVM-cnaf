@@ -49,7 +49,7 @@ It is
     
 #    server.send_message(msg)
 
-def printForm(opU,opF):
+def printForm(opU,opF,conditions):
     form_template_file=open ("../templates/form.html", "r")
     form_template=form_template_file.read()
     print("Content-Type: text/html\n\n")
@@ -58,7 +58,7 @@ def printForm(opU,opF):
     for i in opU.keys() :
         options_Site+='<option value="%s">%s</option>' %(i,i)
         
-    print(form_template.format(options_map=json.dumps(opU),options_Site=options_Site, visualize_map=""))
+    print(form_template.format(options_map=json.dumps(opU),options_Site=options_Site))
 
 
 def receiveAndSaveToGoogleSheet(dict_ids, col_simulator_filenames, col_mvm_filenames, col_campaigns, col_daqs, col_firmwares, col_comments,service, SAMPLE_SPREADSHEET_ID, all_s,VERB=False):
@@ -300,14 +300,14 @@ def main():
 #   
     (optionmap,opF,opU) = getIDsForm(dict_ids, False)
 
-    condition_table = dictForVisualize(dict_s ,col_simulator_filenames,col_mvm_filenames,col_campaigns, col_daqs, col_firmwares, col_comments, all_s)
+    condition_table = dictForVisualize(dict_ids ,col_simulator_filenames,col_mvm_filenames,col_campaigns, col_daqs, col_firmwares, col_comments, all_s)
     
 #    print (opU)
 
     if "submit" in form.keys():
         receiveAndSaveToGoogleSheet(dict_ids, col_simulator_filenames, col_mvm_filenames, col_campaigns, col_daqs, col_firmwares, col_comments,service, SAMPLE_SPREADSHEET_ID, all_s,False)
     else:
-        printForm(opU,opF, conditions_table)
+        printForm(opU,opF, condition_table)
 
 if __name__ == '__main__':
     main()
