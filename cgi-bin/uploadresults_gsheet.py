@@ -239,14 +239,15 @@ def receiveAndSaveToGoogleSheet(dict_ids, col_simulator_filenames, col_mvm_filen
 # prepare a zip
 #
     try:
-     zipfilename ='result_'+site+'_'+campaign+'_'+str(testID)+".zip"
-     zipObj = ZipFile(path_at_CNAF+zipfilename, 'w')
+     #zipfilename ='result_'+site+'_'+campaign+'_'+str(testID)+".zip"
+     zipfilename = CNAF_Prefix + '/' + site+ '/'+campaign+ '/'+str(testID)+'.zip'
+     zipObj = ZipFile(zipfilename, 'w')
 
      if mvmonly == False:
-        zipObj.write(path_at_CNAF+file_RWA.filename,file_RWA.filename)
-        zipObj.write(path_at_CNAF+file_DTA.filename,file_DTA.filename)
-     zipObj.write(path_at_CNAF+file_mvm.filename,file_mvm.filename)
-     zipObj.write(path_at_CNAF+json_name,json_name)
+        zipObj.write(path_at_CNAF+file_RWA.filename,str(testID)+'/'+file_RWA.filename)
+        zipObj.write(path_at_CNAF+file_DTA.filename,str(testID)+'/'+file_DTA.filename)
+     zipObj.write(path_at_CNAF+file_mvm.filename,str(testID)+'/'+file_mvm.filename)
+     zipObj.write(path_at_CNAF+json_name,str(testID)+'/'+json_name)
      zipObj.close()
     except:
              print ('<p><font size="7" color="#ff0000">FAILED ZIP CREATION!!!!! NOT CONTINUING </font></p>')
