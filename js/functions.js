@@ -79,7 +79,9 @@ function myAlertBox() {
     var myData = JSON.stringify(conditions[sStr][cStr][tStr]);
     var myData2 ="";
     for (var key in conditions[sStr][cStr][tStr]) {
-	myData2 = myData2+"\n"+key+" = "+conditions[sStr][cStr][tStr][key]
+        if(key.includes("filename") == false){
+	 myData2 = myData2+"\n"+key+" = "+conditions[sStr][cStr][tStr][key]
+        }
     }
     alert(myData2);
 }
