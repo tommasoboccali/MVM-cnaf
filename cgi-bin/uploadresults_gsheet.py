@@ -4,6 +4,7 @@ import cgitb; cgitb.enable()
 import json
 import pathlib
 import hashlib
+from zipfile import ZipFile
  
 from datetime import datetime
 form = cgi.FieldStorage()
@@ -216,16 +217,17 @@ def receiveAndSaveToGoogleSheet(dict_ids, col_simulator_filenames, col_mvm_filen
     # dump to json
 
 #    print (dict_json)
+    json_name = 'result_'+site+'_'+campaign+'_'+str(testID)+".json"
     try:
-        with open(path_at_CNAF+'result.json', 'w') as fp:
+        with open(path_at_CNAF+json_name, 'w') as fp:
             json.dump(dict_json, fp)
     except:
         print ('<p><font size="7" color="#ff0000">FAILED FILE UPLOAD!!!!! NOT CONTINUING </font></p>')
 
-        print ('<p><font size="7" color="#ff0000">Saving file ','result.json', ' to ', path_at_CNAF, ' failed! </font></p>')
+        print ('<p><font size="7" color="#ff0000">Saving file ',json_name, ' to ', path_at_CNAF, ' failed! </font></p>')
         sys.exit(5)
 
-    if os.path.exists(path_at_CNAF+'result.json') == False :
+    if os.path.exists(path_at_CNAF+json_name) == False :
         print ('<p><font size="7" color="#ff0000">Saving JSON File Failed </font></p>')
         sys.exit(5)
         
@@ -233,6 +235,31 @@ def receiveAndSaveToGoogleSheet(dict_ids, col_simulator_filenames, col_mvm_filen
     #
     # upload also this
     #
+
+# prepare a zip
+#
+    try:
+     zipfilename ='result_'+site+'_'+campaign+'_'+str(testID)+".zip"
+     zipObj = ZipFile(path_at_CNAF+zipfilename, 'w')
+
+     if mvmonly == False:
+        zipObj.write(path_at_CNAF+file_RWA.filename,file_RWA.filename)
+        zipObj.write(path_at_CNAF+file_DTA.filename,file_DTA.filename)
+     zipObj.write(path_at_CNAF+file_mvm.filename,file_mvm.filename)
+     zipObj.write(path_at_CNAF+json_name,json_name)
+     zipObj.close()
+    except:
+             print ('<p><font size="7" color="#ff0000">FAILED ZIP CREATION!!!!! NOT CONTINUING </font></p>')
+             sys.exit(10)
+
+    print('<p><font size="7" color="#00aa00">File Upload was ok</font></p>')
+
+    print('<p><font size="7" color="#00aa00">ZIP upload was ok</font></p>')
+    #
+    # upload also this
+    #
+
+
 
 # simulator 1 and 2 ....
 
