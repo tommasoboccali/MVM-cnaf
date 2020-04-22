@@ -40,6 +40,6 @@ python3 -m http.server --cgi
 
 and pointing to 
 
-http://localhost:8000/cgi-bin/uploadresults_gsheet
+http://localhost:8000/cgi-bin/uploadresults_gsheet.py
 
 (if you started the server from top level)

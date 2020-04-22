@@ -68,3 +68,7 @@ function MVMonly() {
         document.getElementById('file2').disabled = false;
     }
 }
+
+function myAlertBox() {
+      alert("I am an alert box!");
+}
