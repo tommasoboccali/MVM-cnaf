@@ -77,5 +77,9 @@ function myAlertBox() {
     var tIdx = document.getElementById("selectTestID").selectedIndex;
     var tStr = document.getElementById("selectTestID").options[tIdx].value;
     var myData = JSON.stringify(conditions[sStr][cStr][tStr]);
-    alert(myData);
+    var myData2 ="";
+    for (var key in conditions[sStr][cStr][tStr]) {
+	myData2 = myData2+"\n"+key+" = "+conditions[sStr][cStr][tStr][key]
+    }
+    alert(myData2);
 }
