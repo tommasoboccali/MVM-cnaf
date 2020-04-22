@@ -70,5 +70,12 @@ function MVMonly() {
 }
 
 function myAlertBox() {
-      alert("I am an alert box!");
+    var sIdx = document.getElementById("selectSite").selectedIndex;
+    var sStr = document.getElementById("selectSite").options[sIdx].value;
+    var cIdx = document.getElementById("selectCampaign").selectedIndex;
+    var cStr = document.getElementById("selectCampaign").options[cIdx].value;
+    var tIdx = document.getElementById("selectTestID").selectedIndex;
+    var tStr = document.getElementById("selectTestID").options[tIdx].value;
+    var myData = JSON.stringify(conditions[sStr][cStr][tStr]);
+    alert(myData);
 }

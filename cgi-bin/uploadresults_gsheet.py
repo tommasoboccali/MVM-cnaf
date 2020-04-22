@@ -58,7 +58,7 @@ def printForm(opU,opF,conditions):
     for i in opU.keys() :
         options_Site+='<option value="%s">%s</option>' %(i,i)
         
-    print(form_template.format(options_map=json.dumps(opU),options_Site=options_Site))
+    print(form_template.format(options_map=json.dumps(opU),options_Site=options_Site,conditions=conditions))
 
 
 def receiveAndSaveToGoogleSheet(dict_ids, col_simulator_filenames, col_mvm_filenames, col_campaigns, col_daqs, col_firmwares, col_comments,service, SAMPLE_SPREADSHEET_ID, all_s,VERB=False):
