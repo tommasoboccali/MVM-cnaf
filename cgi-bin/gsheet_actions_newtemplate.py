@@ -143,7 +143,7 @@ def getIDsFromSheet(SAMPLE_SPREADSHEET_ID,Suffix_SAMPLE_RANGE_NAME, service, she
 #
 # check if all the colums have at least the length       
 #
-            if (len(values[row])<col_simulator_filename or len(values[row])<col_mvm_filename or len(values[row])<col_campaign or len(values[row])<col_daq or len(values[row])<col_firmware or len(values[row])<col_comment):
+            if (len(values[row])<col_campaign or len(values[row])<col_daq or len(values[row])<col_firmware or len(values[row])<col_comment):
                if (VERB==True):
                  print ("ROW malformed (too short)")
                continue
@@ -156,7 +156,7 @@ def getIDsFromSheet(SAMPLE_SPREADSHEET_ID,Suffix_SAMPLE_RANGE_NAME, service, she
                      print ("Campaign not defined for ID",values[row][0])
                    continue
 
-            if (values[row][col_simulator_filename]== "" and values[row][col_mvm_filename]==""):
+            if ( (len(values[row])<col_mvm_filename or len(values[row])<col_simulator_filename) or (values[row][col_simulator_filename]== "" and values[row][col_mvm_filename]=="")    ):
                 if (VERB==True):
                     print ("*  ID ", s, values[row][0], " Campaign",(values[row][col_campaign] ))
 #                    print('%s %s %s %s' % ("* ID ", s, values[row][0], " Campaign",values[row][col_campaign[s]] ))
@@ -263,6 +263,8 @@ def dictForVisualize(dict_s, col_simulator_filenames,col_mvm_filenames,col_campa
                     conditions[site][campaign][id] = {}
                     rowin_sheet=dict_s[site][(id,campaign)][0]
                     for i in range(0,len(all_s[site][2])): #these are the headers
-                            conditions[site][campaign][id][all_s[site][2][i]] =  all_s[site][rowin_sheet][i]
+                            #print ("uuuuuuuuuuuuuuuu",i,len(all_s[site][rowin_sheet]))
+                            if i< len(all_s[site][rowin_sheet])  :
+                             conditions[site][campaign][id][all_s[site][2][i]] =  all_s[site][rowin_sheet][i]
     return conditions
     

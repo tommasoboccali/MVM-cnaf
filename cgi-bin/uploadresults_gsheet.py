@@ -207,6 +207,7 @@ def receiveAndSaveToGoogleSheet(dict_ids, col_simulator_filenames, col_mvm_filen
 #
     conditions_dict = {}
     for i in range(0,len(all_s[site][2])): #these are the headers
+      if (i< len(all_s[site][rowin_sheet])): 
        conditions_dict[all_s[site][2][i]] =  all_s[site][rowin_sheet][i]
     dict_json['conditions']= conditions_dict
 
