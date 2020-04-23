@@ -188,8 +188,13 @@ def receiveAndSaveToGoogleSheet(dict_ids, col_simulator_filenames, col_mvm_filen
     rowin_sheet=dict_ids[site][(testID,campaign)][0]
     dict_json['MVM_firmware_version'] =all_s[site][rowin_sheet][col_firmwares[site]]
     dict_json['DAQ_software_version'] = all_s[site][rowin_sheet][col_daqs[site]]
-    dict_json['comment']= all_s[site][rowin_sheet][col_comments[site]]
-    #
+    
+
+    if col_comments[site]<len(all_s[site][rowin_sheet]):
+      dict_json['comment']= all_s[site][rowin_sheet][col_comments[site]]
+    else:
+     dict_json['comment']=''
+      #
     dict_json['MVM_file']=file_mvm.filename
     dict_json['MVM_file_checksum']=md5sum(path_at_CNAF+file_mvm.filename)
     if (mvmonly == False):

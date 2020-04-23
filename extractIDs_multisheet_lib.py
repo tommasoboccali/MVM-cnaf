@@ -29,7 +29,7 @@ def main():
 
     condition_table = dictForVisualize(dict_ids ,col_simulator_filenames,col_mvm_filenames,col_campaigns, col_daqs, col_firmwares, col_comments, all_s)
 
-    print (condition_table)
+#Trueprint (condition_table)
 
     #    print (all_s)
     

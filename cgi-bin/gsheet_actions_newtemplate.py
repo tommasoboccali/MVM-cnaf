@@ -108,7 +108,7 @@ def getIDsFromSheet(SAMPLE_SPREADSHEET_ID,Suffix_SAMPLE_RANGE_NAME, service, she
     col_comment=-1
     dict_id = {}
     for row in range(0,len(values)):
-#            print (row)
+#            print ('----------------ROW',row,values[row])
             num=num+1
             if num <= 2 :
                 #this is the ISO requirement line, it MUST be here
@@ -143,7 +143,8 @@ def getIDsFromSheet(SAMPLE_SPREADSHEET_ID,Suffix_SAMPLE_RANGE_NAME, service, she
 #
 # check if all the colums have at least the length       
 #
-            if (len(values[row])<col_campaign or len(values[row])<col_daq or len(values[row])<col_firmware or len(values[row])<col_comment):
+#            print ("========================= ",len(values[row]),col_campaign,col_daq,col_firmware,col_comment )
+            if (len(values[row])-1<col_campaign or len(values[row])-1<col_daq or len(values[row])-1<col_firmware):
                if (VERB==True):
                  print ("ROW malformed (too short)")
                continue
@@ -155,8 +156,11 @@ def getIDsFromSheet(SAMPLE_SPREADSHEET_ID,Suffix_SAMPLE_RANGE_NAME, service, she
                    if (VERB==True):
                      print ("Campaign not defined for ID",values[row][0])
                    continue
-
-            if ( (len(values[row])<col_mvm_filename or len(values[row])<col_simulator_filename) or (values[row][col_simulator_filename]== "" and values[row][col_mvm_filename]=="")    ):
+#            print ("222222222222222222 ", values[row][0],len(values[row]),col_mvm_filename,col_simulator_filename,col_comment)
+            #print ("111111111111111111 ", values[row][0],len(values[row]),col_mvm_filename,col_simulator_filename,values[row][col_simulator_filename],values[row][col_mvm_filename])
+#            if ( (len(values[row])-1<col_mvm_filename or len(values[row])-1<col_simulator_filename) or (values[row][col_simulator_filename]== "" and values[row][col_mvm_filename]=="")    ):
+#            print ("[[[[[[[[[[[[[[[[[[[[[   ",len(values[row]),col_mvm_filename,col_simulator_filename)
+            if ( ((col_mvm_filename>= len(values[row])) or (col_mvm_filename< len(values[row]) and values[row][col_mvm_filename]=="")) and ((col_simulator_filename>= len(values[row])) or (col_simulator_filename< len(values[row]) and values[row][col_simulator_filename]==""))):
                 if (VERB==True):
                     print ("*  ID ", s, values[row][0], " Campaign",(values[row][col_campaign] ))
 #                    print('%s %s %s %s' % ("* ID ", s, values[row][0], " Campaign",values[row][col_campaign[s]] ))
