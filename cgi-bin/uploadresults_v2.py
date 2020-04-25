@@ -74,7 +74,10 @@ def printForm(opU,opF,mydict):
 def receiveAndSaveToGoogleSheet(mydict,service, SAMPLE_SPREADSHEET_ID,VERB=False):
 
     CNAF_Prefix ='/storage/data/'
-#    CNAF_Prefix='/Users/tom/DBClone/work/MVM/data'
+#    CNAF_Prefix='/Users/tom/DBClone/work/MVM/data/'
+    if os.getenv('CNAF_Prefix') !="" and os.getenv('CNAF_Prefix') != None:
+        CNAF_Prefix = os.getenv('CNAF_Prefix')+'/'
+        
     print("Content-Type: text/html\n\n")
 
 
@@ -291,6 +294,9 @@ def receiveAndSaveToGoogleSheet(mydict,service, SAMPLE_SPREADSHEET_ID,VERB=False
 def main():
     # The ID and range of a sample spreadsheet.
     SAMPLE_SPREADSHEET_ID = '1AQXgqCKNAuCCDGffi9QU_v_9tOP97qYQNyxx9L6pWRA'
+    if os.getenv('TEST_gsheet') !="" and os.getenv('TEST_gsheet') != None:
+        SAMPLE_SPREADSHEET_ID = os.getenv('TEST_gsheet')+'/'
+
     Suffix_SAMPLE_RANGE_NAME = '!A:AR'
     service  = initGsheet(SAMPLE_SPREADSHEET_ID)
 

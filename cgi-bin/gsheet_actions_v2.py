@@ -82,6 +82,12 @@ def getRange(service,SAMPLE_SPREADSHEET_ID, SAMPLE_RANGE_NAME ):
     values = result.get('values', [])
     return values
 
+def malformedHeader(header):
+    # need to have MVM_filename, simulator_filename, campaign, N
+    if 'N' not in header or 'campaign'  not in header or 'MVM_filename'  not in header or 'simulator_filename'  not in header:
+        return True
+    return False
+
 def malformedRow(row, VERB=False):
     #
     # request #1: there must be an Id
@@ -129,6 +135,10 @@ def getDBFromSheet(SAMPLE_SPREADSHEET_ID,Suffix_SAMPLE_RANGE_NAME, service, shee
                 for col in range(0,len(values[row])):
                     header.append(values[row][col])
                 continue
+            if malformedHeader(header)== True:
+                if (VERB==True):
+                        print ("Malformed header, not considering sheet", s)
+                return None
             if values[row][0]  == "":
                 if (VERB==True):
                         print ("Skipping empty line")
