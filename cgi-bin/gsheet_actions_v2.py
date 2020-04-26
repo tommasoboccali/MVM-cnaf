@@ -112,7 +112,7 @@ def malformedRow(row, VERB=False):
     return False
 
 
-def getDBFromSheet(SAMPLE_SPREADSHEET_ID,Suffix_SAMPLE_RANGE_NAME, service, sheet_name, VERB=True):
+def getDBFromSheet(SAMPLE_SPREADSHEET_ID,Suffix_SAMPLE_RANGE_NAME, service, sheet_name, VERB=False):
     db = {}
     s = sheet_name
     SAMPLE_RANGE_NAME = s+Suffix_SAMPLE_RANGE_NAME
@@ -178,7 +178,7 @@ def dbToDict(db, VERB=False):
     return mydict
             
 
-def getDBsFromMultipleSheets(SAMPLE_SPREADSHEET_ID,Suffix_SAMPLE_RANGE_NAME, service,VERB=True):
+def getDBsFromMultipleSheets(SAMPLE_SPREADSHEET_ID,Suffix_SAMPLE_RANGE_NAME, service,VERB=False):
 
     sheet_names = getSheetNames(service,SAMPLE_SPREADSHEET_ID)
 

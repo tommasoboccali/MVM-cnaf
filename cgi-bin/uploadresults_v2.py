@@ -301,7 +301,7 @@ def main():
     service  = initGsheet(SAMPLE_SPREADSHEET_ID)
 
 
-    VERB=True
+    VERB=False
 
     db_s = getDBsFromMultipleSheets(SAMPLE_SPREADSHEET_ID,Suffix_SAMPLE_RANGE_NAME, service,VERB=VERB)
 ##    if VERB==True:
