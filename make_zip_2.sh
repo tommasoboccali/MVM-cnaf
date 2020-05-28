@@ -4,7 +4,7 @@ cd /storage/mvm/data
 listsite=`ls -1`
 for i in $listsite
 do
-   echo Working in Site  $i 
+   echo Working in Site $i 
    cd $i
    listCampaign=`ls -1`
    for j in $listCampaign
