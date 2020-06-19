@@ -5,7 +5,7 @@ import json
 import pathlib
 import hashlib
 from zipfile import ZipFile
- 
+
 from datetime import datetime
 form = cgi.FieldStorage()
 
@@ -38,7 +38,7 @@ def sendMail( site,id, campaign, path, filename_simulator_rwa, filename_simulato
     b = "Site = "+site + "\nCampaign ="+ campaign +"\nTestID"+str(id)+"\nFILENAME_SIM_RWA  ="+filename_simulator_rwa+"\nFILENAME_SIM_DTA  ="+filename_simulator_dta+"\nFILENAME_MVM  ="+filename_mvm+"\nPATH    ="+path
     body = '''
 Dear all, a new upload has happened.
-It is 
+It is
 ''' + b
     msg['Subject'] = "subject"
     msg['From'] = f
@@ -46,7 +46,7 @@ It is
     msg.set_content(body)
 
     print (msg)
-    
+
 #    server.send_message(msg)
 
 def printForm(opU,opF,conditions):
@@ -57,14 +57,14 @@ def printForm(opU,opF,conditions):
     options_Site=""
     for i in opU.keys() :
         options_Site+='<option value="%s">%s</option>' %(i,i)
-        
+
     print(form_template.format(options_map=json.dumps(opU),options_Site=options_Site,conditions=conditions))
 
 
 def receiveAndSaveToGoogleSheet(dict_ids, col_simulator_filenames, col_mvm_filenames, col_campaigns, col_daqs, col_firmwares, col_comments,service, SAMPLE_SPREADSHEET_ID, all_s,VERB=False):
 
     CNAF_Prefix ='/storage/data/'
-#    CNAF_Prefix='/Users/tom/DBClone/work/MVM/data'
+    CNAF_Prefix='/Users/tom/DBClone/work/MVM/data'
     print("Content-Type: text/html\n\n")
 
 
@@ -85,6 +85,7 @@ def receiveAndSaveToGoogleSheet(dict_ids, col_simulator_filenames, col_mvm_filen
      file_DTA = form['file1']
      file_RWA = form['file2']
     file_mvm = form['file3']
+    file_opt = form['fileopt']
     #
     # i issue an error if the first two are different suffix apart
     #
@@ -130,6 +131,13 @@ def receiveAndSaveToGoogleSheet(dict_ids, col_simulator_filenames, col_mvm_filen
     if os.path.exists(path_at_CNAF+file_mvm.filename) == False :
         print ('<p><font size="7" color="#ff0000">FAILED FILE UPLOAD!!!!! NOT CONTINUING </font></p>')
         sys.exit(4)
+    try:
+        if (file_opt.filename !=""):
+            open(path_at_CNAF+file_opt.filename, 'wb').write(file_opt.file.read())
+    except:
+        print ('<p><font size="7" color="#ff0000">Saving file ',file_opt.filename, ' to ', path_at_CNAF, '</font></p>')
+        sys.exit(12)
+
 
 #    if file_simulator.filename :
 #        open('/dev/null', 'wb').write(file_simulator.file.read()) #FIXME: do something better than writing to dev null
@@ -137,7 +145,7 @@ def receiveAndSaveToGoogleSheet(dict_ids, col_simulator_filenames, col_mvm_filen
 #        open('/dev/null', 'wb').write(file_mvm.file.read()) #FIXME: do something better than writing to dev null
 #    if file_simulator_2xs.filename :
 #        open('/dev/null', 'wb').write(file_simulator_2.file.read()) #FIXME: do something better than writing to dev null
-    
+
     print('<p><font size="7" color="#00aa00">File Upload was ok</font></p>')
     #
     # now I fix them in the gsheet
@@ -152,6 +160,8 @@ def receiveAndSaveToGoogleSheet(dict_ids, col_simulator_filenames, col_mvm_filen
       print ("F_DTA   = " , file_DTA.filename, '<br>')
       print ("F_RWA   = " ,file_RWA.filename , '<br>')
     print ("MVMONLY = " , mvmonly , '<br>')
+    print ("F_ADD   = " , file_opt.filename, '<br>')
+
     print('</font></p>')
 
 #
@@ -179,7 +189,7 @@ def receiveAndSaveToGoogleSheet(dict_ids, col_simulator_filenames, col_mvm_filen
     timestampStr = dateTimeObj.strftime("%d-%b-%Y (%H:%M:%S.%f)")
     dict_json['upload_timestamp'] = timestampStr
 
-    dict_json['user'] =os.getenv('OIDC_CLAIM_preferred_username') 
+    dict_json['user'] =os.getenv('OIDC_CLAIM_preferred_username')
     dict_json['site'] = site
     dict_json['campaign'] = campaign
     dict_json['testID'] = testID
@@ -188,13 +198,15 @@ def receiveAndSaveToGoogleSheet(dict_ids, col_simulator_filenames, col_mvm_filen
     rowin_sheet=dict_ids[site][(testID,campaign)][0]
     dict_json['MVM_firmware_version'] =all_s[site][rowin_sheet][col_firmwares[site]]
     dict_json['DAQ_software_version'] = all_s[site][rowin_sheet][col_daqs[site]]
-    
+
 
     if col_comments[site]<len(all_s[site][rowin_sheet]):
       dict_json['comment']= all_s[site][rowin_sheet][col_comments[site]]
     else:
      dict_json['comment']=''
       #
+    if (file_opt.filename!=""):
+        dict_json['OPT_file']= file_opt.filename
     dict_json['MVM_file']=file_mvm.filename
     dict_json['MVM_file_checksum']=md5sum(path_at_CNAF+file_mvm.filename)
     if (mvmonly == False):
@@ -202,17 +214,17 @@ def receiveAndSaveToGoogleSheet(dict_ids, col_simulator_filenames, col_mvm_filen
         dict_json['simulator_DTA_file']=file_DTA.filename
         dict_json['simulator_RWA_file_checksum']=md5sum(path_at_CNAF+file_RWA.filename)
         dict_json['simulator_DTA_file_checksum']=md5sum(path_at_CNAF+file_DTA.filename)
-    
+
     dict_json['path_at_CNAF'] = path_at_CNAF
     dict_json["has_simulator"] =  1 if mvmonly == False else 0
 
 #    dict_json['conditions'] = all_s[site][rowin_sheet]
 #
-# put a dict 
+# put a dict
 #
     conditions_dict = {}
     for i in range(0,len(all_s[site][2])): #these are the headers
-      if (i< len(all_s[site][rowin_sheet])): 
+      if (i< len(all_s[site][rowin_sheet])):
        conditions_dict[all_s[site][2][i]] =  all_s[site][rowin_sheet][i]
     dict_json['conditions']= conditions_dict
 
@@ -236,7 +248,7 @@ def receiveAndSaveToGoogleSheet(dict_ids, col_simulator_filenames, col_mvm_filen
     if os.path.exists(path_at_CNAF+json_name) == False :
         print ('<p><font size="7" color="#ff0000">Saving JSON File Failed </font></p>')
         sys.exit(5)
-        
+
     print('<p><font size="7" color="#00aa00">JSON Upload was ok</font></p>')
     #
     # upload also this
@@ -253,6 +265,9 @@ def receiveAndSaveToGoogleSheet(dict_ids, col_simulator_filenames, col_mvm_filen
         zipObj.write(path_at_CNAF+file_RWA.filename,str(testID)+'/'+file_RWA.filename)
         zipObj.write(path_at_CNAF+file_DTA.filename,str(testID)+'/'+file_DTA.filename)
      zipObj.write(path_at_CNAF+file_mvm.filename,str(testID)+'/'+file_mvm.filename)
+     if (file_opt.filename !=""):
+        zipObj.write(path_at_CNAF+file_opt.filename,str(testID)+'/'+file_opt.filename)
+
      zipObj.write(path_at_CNAF+json_name,str(testID)+'/'+json_name)
      zipObj.close()
     except:
@@ -270,8 +285,8 @@ def receiveAndSaveToGoogleSheet(dict_ids, col_simulator_filenames, col_mvm_filen
 
 # simulator 1 and 2 ....
 
-#    print ('===================', dict_ids[site][(testID,campaign)][0])   
-        
+#    print ('===================', dict_ids[site][(testID,campaign)][0])
+
     if (mvmonly==False):
             res = insert_single_cell(dict_ids[site][(testID,campaign)][0], col_simulator_filenames[site],filename_simulator_no_suffix, service,site, SAMPLE_SPREADSHEET_ID, VERB=VERB )
             if res == True:
@@ -303,11 +318,11 @@ def main():
 
 #
 # create megadict
-#   
+#
     (optionmap,opF,opU) = getIDsForm(dict_ids, False)
 
     condition_table = dictForVisualize(dict_ids ,col_simulator_filenames,col_mvm_filenames,col_campaigns, col_daqs, col_firmwares, col_comments, all_s)
-    
+
 #    print (opU)
 
     if "submit" in form.keys():
@@ -317,4 +332,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
