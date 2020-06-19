@@ -3,14 +3,14 @@ we moved to python3
 you need to do once
 
 pip3 install --upgrade google-api-python-client google-auth-httplib2 google-auth-oauthlib
-     
-again only once you have to get credentials.json, by going to 
+
+again only once you have to get credentials.json, by going to
 
 https://developers.google.com/sheets/api/quickstart/python
 
 and clicking on Enable the Google Sheets API (follow the instructions and then copy the file in the dir)
-     
-then the first time you run 
+
+then the first time you run
 
 python3 extractIDs_multisheet_lib.py
 
@@ -38,8 +38,11 @@ ln -s <here>/MVM-cnaf/templates <here>
 
 python3 -m http.server --cgi
 
-and pointing to 
+and pointing to
 
 http://localhost:8000/cgi-bin/uploadresults_gsheet.py
 
 (if you started the server from top level)
+
+Note: there is now a _v2 set of files.
+they are easier but were never tested
