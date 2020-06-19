@@ -64,7 +64,7 @@ def printForm(opU,opF,conditions):
 def receiveAndSaveToGoogleSheet(dict_ids, col_simulator_filenames, col_mvm_filenames, col_campaigns, col_daqs, col_firmwares, col_comments,service, SAMPLE_SPREADSHEET_ID, all_s,VERB=False):
 
     CNAF_Prefix ='/storage/data/'
-    CNAF_Prefix='/Users/tom/DBClone/work/MVM/data'
+    #CNAF_Prefix='/Users/tom/DBClone/work/MVM/data'
     print("Content-Type: text/html\n\n")
 
 
